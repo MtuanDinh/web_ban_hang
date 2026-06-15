@@ -1,5 +1,5 @@
 <?php 
-    require_once("include/check_admin_alive.php");
+    require_once("includes/check_admin_alive.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
