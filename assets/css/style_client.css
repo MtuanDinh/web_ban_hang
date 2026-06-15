@@ -6,10 +6,15 @@
 
 body {
   padding: 0;
-
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ép chiều cao tối thiểu bằng đúng 100% màn hình */
   margin: 0;
 }
-
+.main-content {
+  flex: 1;
+}
+/* ---------------------- header ----------------------- */
 #icon {
   width: 50px;
 
@@ -23,7 +28,7 @@ body {
 
   justify-content: center;
 }
-
+/* ---------------------- nav ----------------------- */
 nav {
   background-color: rgb(223, 60, 71);
 
@@ -152,4 +157,50 @@ nav ul .submenu li a {
 nav ul .submenu li a:hover {
   background-color: #f3f4f6;
   color: #d70018; /* Màu đỏ đặc trưng */
+}
+/* ----------------------------------footer---------------------------------*/
+footer {
+  background-color: #f3f4f5;
+}
+.container {
+  max-width: 1200px; /* Thay đổi con số này cho bằng với max-width của phần header phía trên */
+  margin: 0 auto; /* Tự động căn giữa khung container ra giữa màn hình */
+  padding: 0 15px; /* Tránh việc chữ bị dính sát mép màn hình trên điện thoại */
+  margin-bottom: 30px;
+}
+.footer-links {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 150px;
+}
+.footer-links li:nth-child(1),
+.footer-links li:nth-child(2),
+.footer-links li:nth-child(3) {
+  width: 33.3333%;
+}
+.footer-links li {
+  padding: 30px 0 0 0;
+}
+.footer-links li p {
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  color: #444;
+}
+.footer-links li a {
+  text-decoration: none;
+  color: #444;
+}
+
+.footer-info {
+  text-align: center;
+  color: #71717a;
+}
+.footer-badges {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center;
+  margin: 15px 0;
 }
