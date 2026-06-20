@@ -1,0 +1,95 @@
+:root {
+    /* Màu nền và các khối */
+    --bg-admin: #121212;         /* Đen sẫm cho nền tổng thể */
+    --surface-admin: #1E1E1E;    /* Xám than cho form, bảng biểu, thẻ thống kê */
+    --sidebar-bg: #1A1A1A;       /* Màu riêng cho thanh menu dọc bên trái */
+    
+    /* Màu chữ */
+    --text-admin: #E0E0E0;       /* Trắng xám cho chữ chính (chống lóa mắt) */
+    --text-muted: #A0A0A0;       /* Xám trung tính cho ghi chú, placeholder */
+    
+    /* Màu chủ đạo & Nút bấm */
+    --primary-color: #00E5FF;    /* Xanh Cyan Neon rực rỡ cho các nút Lưu, Sửa */
+    --primary-hover: #00B8D4;    /* Xanh sậm hơn một chút khi hover */
+    
+    /* Màu nhấn (Cảnh báo/Lỗi) */
+    --accent-error: #FF4081;     /* Hồng đậm/Đỏ neon cho nút Xóa, báo lỗi form */
+    --accent-success: #00E676;   /* Xanh lá phản quang cho thông báo thành công */
+    
+    /* Đường viền */
+    --border-admin: #333333;     /* Viền xám tối phân tách các hàng trong bảng */
+}
+
+body {
+    background-color: var(--bg-admin);
+    color: var(--text-admin);
+}
+
+* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+h3{
+    text-align: center;
+    background-color: var(--sidebar-bg);
+    height: 50px;
+    padding: 10px;
+}
+
+#login_place {
+    padding: 40px;
+    margin: auto;
+    max-width: 450px;
+    border: 5px solid var(--border-admin);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background-color: var(--surface-admin);
+    align-items: center;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+label{
+    color: var(--text-admin);
+}
+
+input{
+    height: 30px;
+    margin: 10px 0;
+    width: 100%;
+    padding: 0 10px;
+    border: 1px solid var(--border-admin);
+    border-radius: 5px;
+    background-color: var(--bg-admin);
+    color: var(--text-admin);
+}
+
+#login_btn{
+    width: 100px;
+    border-radius: 5px;
+    align-self: center;
+    background-color: var(--primary-color);
+    color: var(--bg-admin);
+}
+
+#login_btn:hover{
+    background-color: var(--primary-hover);
+    cursor: pointer;
+}
+
+.error_message{
+    padding: 10px;
+    text-align: center;
+    border: 1px solid var(--accent-error);
+    border-radius: 10px;
+    background-color: transparent;
+}
