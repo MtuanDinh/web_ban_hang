@@ -204,3 +204,162 @@ footer {
   align-items: center;
   margin: 15px 0;
 }
+/* --------------------location ----------------------*/
+
+.modal-location {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  display: none;
+  z-index: 999;
+}
+.modal-location-content {
+  width: 400px;
+  height: 550px;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden; /* Cắt góc tròn cho phần header màu đỏ */
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+.modal-header {
+  background-color: #d70018;
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.search-box {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 5px;
+  position: relative;
+}
+.search-box .fa-magnifying-glass {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+.search-box input {
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  font-size: 14px;
+  padding: 10px 10px 10px 35px;
+}
+.close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+.modal-body {
+  padding: 15px 20px;
+}
+.modal-note {
+  margin: 0;
+  text-align: left;
+  font-size: 14px;
+  color: #333;
+  padding: 0 0 10px 0;
+}
+.location-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 30px;
+  max-height: 350px;
+  overflow-y: auto;
+}
+.location-list li {
+  padding: 12px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+}
+.location-list li:hover {
+  color: #d70018; /* Hover đổi màu đỏ */
+}
+
+.location-list li.active {
+  color: #d70018;
+  font-weight: 600;
+}
+
+.location-list li.active i {
+  font-size: 16px;
+}
+
+.location-list::-webkit-scrollbar {
+  width: 6px;
+}
+.location-list::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 10px;
+}
+.location-list::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.modal-location-content {
+  width: 600px !important;
+  height: auto !important; /* Bỏ ép cứng 550px để khung không bị cụt thanh cuộn */
+}
+
+nav ul .location-list {
+  margin: 0 !important;
+  padding: 0 10px !important;
+}
+
+nav ul .location-list li {
+  background-color: transparent !important; /* Xóa dứt điểm màu đỏ #e45464 */
+  margin: 0 !important; /* Xóa lề ngoài 8px bị dính từ thẻ cha */
+  padding: 12px 10px !important; /* Đặt lại khoảng cách chuẩn */
+  border-radius: 0 !important; /* Bỏ bo góc */
+}
+/* ------------------- slide banner ------------------------*/
+.slideshow-container {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+.slide {
+  display: none;
+}
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+.fade {
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
