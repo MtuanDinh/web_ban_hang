@@ -6,9 +6,9 @@
     
     <ul>
         <a href="/web_ban_hang/admin/index.php"><li>Tổng quan</li></a>
-        <a href="#"><li>Quản lý đơn hàng</li></a>
+        <a href="/web_ban_hang/admin/orders/list.php"><li>Quản lý đơn hàng</li></a>
         <a href="/web_ban_hang/admin/products/list.php"><li>Quản lý sản phẩm</li></a>
         <a href="/web_ban_hang/admin/categories/list.php"><li>Quản lý danh mục</li></a>
-        <a href="#"><li>Quản lý khách hàng</li></a>
+        <a href="/web_ban_hang/admin/users/list.php"><li>Quản lý khách hàng</li></a>
     </ul>
 </div>

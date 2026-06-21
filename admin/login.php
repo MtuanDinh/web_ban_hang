@@ -32,7 +32,7 @@
             } 
             else {
                 $username_verify = mysqli_real_escape_string($conn, $username);
-                $sql_query = "SELECT * FROM users WHERE username = '$username_verify' AND role = 0";
+                $sql_query = "SELECT * FROM users WHERE username = '$username_verify' AND role = 1";
                 $result = mysqli_query($conn, $sql_query);
                 if(mysqli_num_rows($result) > 0){
                     $row = mysqli_fetch_assoc($result);
