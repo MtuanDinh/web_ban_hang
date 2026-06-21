@@ -266,7 +266,7 @@ section {
     cursor: pointer;
 }
 
-#category_table {
+table {
     border-collapse: collapse;
     width: 100%;
     border-radius: 10px;
@@ -275,18 +275,18 @@ section {
     overflow: hidden;
 }
 
-#category_table thead {
+table thead {
     background-color: var(--sidebar-bg);
 }
 
-#category_table th,
-#category_table td {
+table th,
+table td {
     text-align: left;
     padding: 5px;
     border-bottom: 1px solid var(--border-admin);
 }
 
-#category_table td:hover {
+table td:hover {
     background-color: var(--sidebar-bg);
 }
 
@@ -386,6 +386,7 @@ section {
 
 .close_btn {
     background: transparent;
+    color: --var(--accent-error);
     border: none;
     font-size: 25px;
     position: absolute;
@@ -421,8 +422,62 @@ section {
 
 /*------------------cate_add_end------------------------*/
 
+/*------------------products----------------------------*/
 
+#product_head{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 10px;
+}
 
+/* Cấu hình hình ảnh sản phẩm thu nhỏ trong bảng */
+.prod_img_thumb {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* Ép text mô tả nằm trên 1 dòng, nếu dài quá tự hiện dấu 3 chấm (...) */
+.prod_desc_cell {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Khung cấu hình chung cho các nút hành động (Sửa / Xóa) */
+.btn_action {
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 13px;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    border: none;
+}
+
+/* Nút Sửa màu xanh mượt */
+.btn_action.edit {
+    background-color: var(--accent-success);
+    color: white;
+}
+
+/* Nút Xóa màu đỏ rực, cách nút sửa một khoảng nhỏ */
+.btn_action.delete {
+    background-color: var(--accent-error);
+    color: white;
+    margin-left: 5px;
+}
+
+/* Định dạng dòng thông báo khi bảng trống */
+.table_no_data {
+    text-align: center;
+    color: var(--text-muted);
+}
+
+/*------------------products-end-------------------------*/
 
 /*
     Main content end
