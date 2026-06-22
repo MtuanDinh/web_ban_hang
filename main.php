@@ -1,12 +1,12 @@
 <main class="main-content">
     <div class="main-banner-wrapper">
-        
+
         <div class="side-banner banner-left">
             <img class="img-side" src="assets/image/bannerleft.jpg" alt="Banner điện thoại trái">
         </div>
 
         <div class="center-column">
-            
+
             <div class="slideshow-container">
                 <div class="slide fade">
                     <div class="numbertext">1 / 3</div>
@@ -24,13 +24,13 @@
 
             <div class="sub-banners">
                 <div class="sub-banner-item">
-                    <img src="https://images.unsplash.com/photo-1585060544812-6b45742d762f?w=500&auto=format&fit=crop" alt="Sub banner 1">
+                    <img src="assets/image/anhbannersamsungsmall.jpg" alt="Sub banner 1">
                 </div>
                 <div class="sub-banner-item">
-                    <img src="https://images.unsplash.com/photo-1598327105666-5b89351cb31b?w=500&auto=format&fit=crop" alt="Sub banner 2">
+                    <img src="assets/image/iphonebannersmall.jpg" alt="Sub banner 2">
                 </div>
                 <div class="sub-banner-item">
-                    <img src="https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=500&auto=format&fit=crop" alt="Sub banner 3">
+                    <img src="assets/image/anhbannerxiaomismall.jpg" alt="Sub banner 3">
                 </div>
             </div>
 
@@ -45,12 +45,24 @@
         <div class="section-header">
             <h2>ĐIỆN THOẠI</h2>
             <div class="filter-tags">
-                <a href="#">Apple</a>
-                <a href="#">Samsung</a>
-                <a href="#">Xiaomi</a>
-                <a href="#">OPPO</a>
+                <?php
+                // Truy vấn lấy các danh mục từ bảng 'categories'
+                // LIMIT 5 để giới hạn hiển thị tối đa 5 hãng, tránh làm vỡ giao diện nếu có quá nhiều
+                $sql_cats = "SELECT id, name FROM categories ORDER BY id ASC LIMIT 5";
+                $result_cats = mysqli_query($conn, $sql_cats);
+
+                if ($result_cats && mysqli_num_rows($result_cats) > 0) {
+                    while ($cat = mysqli_fetch_assoc($result_cats)) {
+                        // In ra các thẻ <a> chứa tên danh mục, bạn có thể truyền id lên URL để làm chức năng lọc sau này
+                        echo '<a href="?category_id=' . $cat['id'] . '">' . htmlspecialchars($cat['name']) . '</a>';
+                    }
+                } else {
+                    // Nếu bảng categories trong Database chưa có dữ liệu, hiển thị tạm thông báo hoặc để trống
+                    echo '<a href="#">Chưa có danh mục</a>';
+                }
+                ?>
             </div>
-             <a href="#" class="view-all">Xem tất cả ></a>
+            <a href="#" class="view-all">Xem tất cả ></a>
         </div>
 
         <div class="product-layout">
@@ -59,214 +71,69 @@
                 <img src="assets/image/iph17-promo-banner.webp" alt="Promo Banner">
 
             </div>
-
             <div class="product-grid">
-                
-                <div class="product-card">
-                    <div class="card-badges">
-                        <span class="badge-discount">Giảm 5%</span>
-                        <span class="badge-installment">Trả góp 0%</span>
-                    </div>
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1603792907190-8744d4d8e47b?w=300&auto=format&fit=crop" alt="iPhone">
-                    </div>
-                    <h3 class="product-name">iPhone 17 Pro Max 256GB | Chính hãng</h3>
-                    <div class="product-price">
-                        <span class="price-current">35.990.000đ</span>
-                        <span class="price-old">37.990.000đ</span>
-                    </div>
-                    <div class="product-promo">
-                        <p>Smember giảm thêm 300.000đ</p>
-                    </div>
-                     <div class="product-shipping">
-                        <i class="fa-solid fa-truck-fast"></i> Giao siêu tốc 2h tại <b class="shipping-location">Hà Nội</b>
-                    </div>
-                    <div class="product-footer">
-                        <div class="rating">⭐ 5</div>
-                        <div class="wishlist">♡ Yêu thích</div>
-                    </div>
-                </div>
+                <?php
+                // 1. KẾT NỐI CSDL
+                // $conn = mysqli_connect("localhost", "root", "", "phone_store");
 
-                <div class="product-card">
-                    <div class="card-badges">
-                        <span class="badge-discount">Giảm 18%</span>
-                        <span class="badge-installment">Trả góp 0%</span>
-                    </div>
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=300&auto=format&fit=crop" alt="Samsung">
-                    </div>
-                    <h3 class="product-name">Samsung Galaxy S24 Ultra 5G 256GB</h3>
-                    <div class="product-price">
-                        <span class="price-current">30.290.000đ</span>
-                        <span class="price-old">36.990.000đ</span>
-                    </div>
-                    <div class="product-promo">
-                        <p>S-Student giảm thêm 500.000đ</p>
-                    </div>
-                     <div class="product-shipping">
-                        <i class="fa-solid fa-truck-fast"></i> Giao siêu tốc 2h tại <b class="shipping-location">Hà Nội</b>
-                    </div>
-                    <div class="product-footer">
-                        <div class="rating">⭐ 5</div>
-                        <div class="wishlist">♡ Yêu thích</div>
-                    </div>
-                </div>
+                // 2. TRUY VẤN
+                $sql = "SELECT p.id, p.name, p.image, MIN(pv.price) as min_price 
+                        FROM products p 
+                        LEFT JOIN product_variants pv ON p.id = pv.product_id 
+                        GROUP BY p.id 
+                        ORDER BY p.id DESC
+                        LIMIT 8";
 
-                <div class="product-card">
-                    <div class="card-badges">
-                        <span class="badge-discount">Giảm 12%</span>
-                        <span class="badge-installment">Trả góp 0%</span>
-                    </div>
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=300&auto=format&fit=crop" alt="Oppo">
-                    </div>
-                    <h3 class="product-name">OPPO Find X7 Ultra 12GB 512GB</h3>
-                    <div class="product-price">
-                        <span class="price-current">48.990.000đ</span>
-                        <span class="price-old">49.990.000đ</span>
-                    </div>
-                    <div class="product-promo">
-                        <p>Thu cũ đổi mới trợ giá 2 triệu</p>
-                    </div>
-                     <div class="product-shipping">
-                        <i class="fa-solid fa-truck-fast"></i> Giao siêu tốc 2h tại <b class="shipping-location">Hà Nội</b>
-                    </div>
-                    <div class="product-footer">
-                        <div class="rating">⭐ 4.9</div>
-                        <div class="wishlist">♡ Yêu thích</div>
-                    </div>
-                </div>
+                $result = mysqli_query($conn, $sql);
 
-                <div class="product-card">
-                    <div class="card-badges">
-                        <span class="badge-discount">Giảm 10%</span>
-                        <span class="badge-installment">Trả góp 0%</span>
-                    </div>
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1601784551446-20c9e07cd8d3?w=300&auto=format&fit=crop" alt="Xiaomi">
-                    </div>
-                    <h3 class="product-name">Xiaomi 14 Pro 5G 12GB 256GB</h3>
-                    <div class="product-price">
-                        <span class="price-current">21.990.000đ</span>
-                        <span class="price-old">24.990.000đ</span>
-                    </div>
-                    <div class="product-promo">
-                        <p>Tặng gói bảo hành VIP 24 tháng</p>
-                    </div>
-                     <div class="product-shipping">
-                        <i class="fa-solid fa-truck-fast"></i> Giao siêu tốc 2h tại <b class="shipping-location">Hà Nội</b>
-                    </div>
-                    <div class="product-footer">
-                        <div class="rating">⭐ 5</div>
-                        <div class="wishlist">♡ Yêu thích</div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="card-badges">
-                        <span class="badge-discount">Giảm 8%</span>
-                        <span class="badge-installment">Trả góp 0%</span>
-                    </div>
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=300&auto=format&fit=crop" alt="iPhone 15">
-                    </div>
-                    <h3 class="product-name">iPhone 15 Pro 128GB | Chính hãng VN/A</h3>
-                    <div class="product-price">
-                        <span class="price-current">25.490.000đ</span>
-                        <span class="price-old">27.990.000đ</span>
-                    </div>
-                    <div class="product-promo">
-                        <p>Giảm thêm 200.000đ qua VNPAY</p>
-                    </div>
-                     <div class="product-shipping">
-                        <i class="fa-solid fa-truck-fast"></i> Giao siêu tốc 2h tại <b class="shipping-location">Hà Nội</b>
-                    </div>
-                    <div class="product-footer">
-                        <div class="rating">⭐ 4.8</div>
-                        <div class="wishlist">♡ Yêu thích</div>
-                    </div>
-                </div>
+                // 3. VÒNG LẶP HIỂN THỊ
+                if ($result && mysqli_num_rows($result) > 0) {
+                    while ($row = mysqli_fetch_assoc($result)) {
 
-                <div class="product-card">
-                    <div class="card-badges">
-                        <span class="badge-discount">Giảm 25%</span>
-                        <span class="badge-installment">Trả góp 0%</span>
-                    </div>
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1697204482436-538cce8c5a24?w=300&auto=format&fit=crop" alt="Samsung Fold">
-                    </div>
-                    <h3 class="product-name">Samsung Galaxy Z Fold5 5G 256GB</h3>
-                    <div class="product-price">
-                        <span class="price-current">30.990.000đ</span>
-                        <span class="price-old">40.990.000đ</span>
-                    </div>
-                    <div class="product-promo">
-                        <p>Tặng gói bảo hành Samsung Care+</p>
-                    </div>
-                     <div class="product-shipping">
-                        <i class="fa-solid fa-truck-fast"></i> Giao siêu tốc 2h tại <b class="shipping-location">Hà Nội</b>
-                    </div>
-                    <div class="product-footer">
-                        <div class="rating">⭐ 5</div>
-                        <div class="wishlist">♡ Yêu thích</div>
-                    </div>
-                </div>
+                        $current_price = $row['min_price'] ? $row['min_price'] : 0;
+                        $old_price = $current_price * 1.1;
+                        $discount_percent = 10;
 
-                <div class="product-card">
-                    <div class="card-badges">
-                        <span class="badge-discount">Giảm 15%</span>
-                        <span class="badge-installment">Trả góp 0%</span>
-                    </div>
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1678911820864-e2c567c655d7?w=300&auto=format&fit=crop" alt="Xiaomi">
-                    </div>
-                    <h3 class="product-name">Xiaomi Redmi Note 13 Pro 5G 8GB 256GB</h3>
-                    <div class="product-price">
-                        <span class="price-current">8.490.000đ</span>
-                        <span class="price-old">9.990.000đ</span>
-                    </div>
-                    <div class="product-promo">
-                        <p>Bảo hành 18 tháng chính hãng</p>
-                    </div>
-                     <div class="product-shipping">
-                        <i class="fa-solid fa-truck-fast"></i> Giao siêu tốc 2h tại <b class="shipping-location">Hà Nội</b>
-                    </div>
-                    <div class="product-footer">
-                        <div class="rating">⭐ 4.7</div>
-                        <div class="wishlist">♡ Yêu thích</div>
-                    </div>
-                    
-                </div>
+                        // ================= ĐIỂM THAY ĐỔI Ở ĐÂY =================
+                        // Nối thêm 'includes/uploads/' vào trước tên file lấy từ CSDL
+                        $img_src = !empty($row['image']) ? 'assets/uploads/' . $row['image'] : 'https://via.placeholder.com/300x300?text=No+Image';
+                        // ========================================================
+                ?>
 
-                <div class="product-card">
-                    <div class="card-badges">
-                        <span class="badge-discount">Giảm 11%</span>
-                        <span class="badge-installment">Trả góp 0%</span>
-                    </div>
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1649859398021-afbbf80e612a?w=300&auto=format&fit=crop" alt="Oppo Reno">
-                    </div>
-                    <h3 class="product-name">OPPO Reno11 5G 8GB 256GB</h3>
-                    <div class="product-price">
-                        <span class="price-current">9.790.000đ</span>
-                        <span class="price-old">10.990.000đ</span>
-                    </div>
-                    <div class="product-promo">
-                        <p>Tặng tai nghe OPPO Enco Buds 2</p>
-                    </div>
-                     <div class="product-shipping">
-                        <i class="fa-solid fa-truck-fast"></i> Giao siêu tốc 2h tại <b class="shipping-location">Hà Nội</b>
-                    </div>
-                    <div class="product-footer">
-                        <div class="rating">⭐ 4.9</div>
-                        <div class="wishlist">♡ Yêu thích</div>
-                    </div>
-                   
+                        <div class="product-card">
+                            <div class="card-badges">
+                                <span class="badge-discount">Giảm <?= $discount_percent ?>%</span>
+                                <span class="badge-installment">Trả góp 0%</span>
+                            </div>
+                            <div class="product-image">
+                                <img src="<?= htmlspecialchars($img_src) ?>" alt="<?= htmlspecialchars($row['name']) ?>">
+                            </div>
 
-                </div>
-                </div>
+                            <h3 class="product-name"><?= htmlspecialchars($row['name']) ?></h3>
 
+                            <div class="product-price">
+                                <span class="price-current"><?= number_format($current_price, 0, ',', '.') ?>đ</span>
+                                <span class="price-old"><?= number_format($old_price, 0, ',', '.') ?>đ</span>
+                            </div>
+                            <div class="product-promo">
+                                <p>Bảo hành 12 tháng chính hãng</p>
+                            </div>
+                            <div class="product-shipping">
+                                <i class="fa-solid fa-truck-fast"></i> Giao siêu tốc 2h tại <b class="shipping-location">Hà Nội</b>
+                            </div>
+                            <div class="product-footer">
+                                <div class="rating">⭐ 5</div>
+                                <div class="wishlist">♡ Yêu thích</div>
+                            </div>
+                        </div>
+
+                <?php
+                    }
+                } else {
+                    echo "<p style='grid-column: 1 / -1; text-align: center; padding: 50px;'>Chưa có sản phẩm nào trong cửa hàng.</p>";
+                }
+                ?>
             </div>
-        </div>
     </section>
 
     <section class="accessory-section">
@@ -295,11 +162,11 @@
                 <img src="https://cdn-icons-png.flaticon.com/128/8583/8583271.png" alt="Gaming Gear">
                 <span>Tai nghe</span>
             </div>
-             <div class="accessory-item">
+            <div class="accessory-item">
                 <img src="https://cdn-icons-png.flaticon.com/128/8583/8583271.png" alt="Gaming Gear">
                 <span>Quạt tản nhiệt</span>
             </div>
-             <div class="accessory-item">
+            <div class="accessory-item">
                 <img src="https://cdn-icons-png.flaticon.com/128/8583/8583271.png" alt="Gaming Gear">
                 <span>Sò lạnh</span>
             </div>
@@ -307,4 +174,4 @@
     </section>
     <br>
 </main>
-<script src ="assets/js/script.js"></script>
+<script src="assets/js/script.js"></script>

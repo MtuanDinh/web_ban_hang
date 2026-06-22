@@ -439,6 +439,7 @@ nav ul .location-list li {
 .sub-banner-item {
   flex: 1; /* Chia đều độ rộng cho 3 ảnh */
   height: 100%;
+  object-fit: cover;
 }
 
 .sub-banner-item img {
