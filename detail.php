@@ -93,8 +93,11 @@ if (!empty($product['gallery'])) {
             <div class="detail-info">
                 <h1><?= htmlspecialchars($product['name']) ?></h1>
                 
-                <div class="price-box">
-                    <span class="current-price" id="display_price">Đang cập nhật giá...</span>
+                <div class="price-box" style="margin-bottom: 20px;">
+                    <span class="badge-discount" id="detail_badge" style="display: none; background: #d70018; color: white; padding: 4px 10px; border-radius: 5px; font-size: 13px; font-weight: bold; margin-bottom: 10px; display: inline-block;">Giảm 0%</span>
+                    <br>
+                    <span class="price-current" id="display_price" style="color: #d70018; font-weight: bold; font-size: 26px;">Đang cập nhật giá...</span>
+                    <span class="price-old" id="display_old_price" style="color: #707070; text-decoration: line-through; font-size: 16px; margin-left: 10px; display: none;"></span>
                 </div>
 
                 <form action="add_to_cart.php" method="POST">

@@ -104,7 +104,7 @@ require_once("includes/connect_db.php");
                     }
                     ?>
                 </div>
-                <a href="#" class="view-all">Xem tất cả ></a>
+                <a href="all_products.php" class="view-all">Xem tất cả ></a>
             </div>
 
             <div class="product-layout">
@@ -116,45 +116,9 @@ require_once("includes/connect_db.php");
                 <div class="product-grid">
                     <?php
                     if ($result && mysqli_num_rows($result) > 0) {
-                        while ($row = mysqli_fetch_assoc($result)) {
+                        while ($row = mysqli_fetch_assoc($result)) { ?>
 
-                            $current_price = $row['min_price'] ? $row['min_price'] : 0;
-                            $old_price = $current_price * 1.1;
-                            $discount_percent = 10;
-
-                            $img_src = !empty($row['image']) ? 'assets/uploads/' . $row['image'] : 'https://via.placeholder.com/300x300?text=No+Image';
-                    ?>
-                            <a href="detail.php?id=<?= $row['id'] ?>" class="product-card" style="text-decoration: none; color: inherit;">
-                                <div class="card-badges">
-                                    <span class="badge-discount">Giảm <?= $discount_percent ?>%</span>
-                                    <span class="badge-installment">Trả góp 0%</span>
-                                </div>
-                                <div class="product-image">
-                                    <img src="<?= htmlspecialchars($img_src) ?>" alt="<?= htmlspecialchars($row['name']) ?>">
-                                </div>
-
-                                <h3 class="product-name"><?= htmlspecialchars($row['name']) ?></h3>
-
-                                <div class="product-price">
-                                    <span class="price-current">
-                                        <?php if($current_price != 0){ ?>
-                                            <?= number_format($current_price, 0, ',', '.') . "đ" ?>
-                                        <?php } else {
-                                            echo "Liên hệ";
-                                        } ?></span>
-                                    <span class="price-old"><?= number_format($old_price, 0, ',', '.') ?>đ</span>
-                                </div>
-                                <div class="product-promo">
-                                    <p>Bảo hành 12 tháng chính hãng</p>
-                                </div>
-                                <div class="product-shipping">
-                                    <i class="fa-solid fa-truck-fast"></i> Giao siêu tốc 2h tại <b class="shipping-location">Hà Nội</b>
-                                </div>
-                                <div class="product-footer">
-                                    <div class="rating">⭐ 5</div>
-                                    <div class="wishlist">♡ Yêu thích</div>
-                                </div>
-                            </a>
+                        <?php include("includes/product_card.php") ?>
                             <?php
                         }
                     } else {
@@ -167,7 +131,7 @@ require_once("includes/connect_db.php");
         <section class="accessory-section">
             <div class="section-header">
                 <h2>Sắm thêm phụ kiện chất lượng</h2>
-                <a href="#" class="view-all">Xem tất cả ></a>
+                <a href="all_accessories.php" class="view-all">Xem tất cả ></a>
             </div>
             <div class="accessory-grid">
                 <div class="accessory-item">
@@ -209,7 +173,25 @@ require_once("includes/connect_db.php");
     <?php
     include "includes/footer.php";
     ?>
-    <script src="assets/js/script.js"></script>
+    <script>
+        let slideIndex = 0;
+        showSlides();
+
+        function showSlides() {
+        let i;
+        let slides = document.getElementsByClassName("slide");
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        slideIndex++;
+
+        if (slideIndex > slides.length) {
+            slideIndex = 1;
+        }
+        slides[slideIndex - 1].style.display = "block";
+        setTimeout(showSlides, 2000); // Change image every 2 seconds
+        }
+    </script>
 </body>
 
 </html>

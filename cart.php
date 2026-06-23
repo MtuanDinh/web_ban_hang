@@ -2,7 +2,6 @@
 require_once("includes/connect_db.php");
 
 // 1. XỬ LÝ CÁC THAO TÁC CẬP NHẬT/XÓA TRONG GIỎ HÀNG
-// Xóa 1 sản phẩm khỏi giỏ
 if (isset($_GET['action']) && $_GET['action'] == 'remove' && isset($_GET['id'])) {
     $remove_id = (int)$_GET['id'];
     if (isset($_SESSION['cart'][$remove_id])) {
@@ -12,32 +11,27 @@ if (isset($_GET['action']) && $_GET['action'] == 'remove' && isset($_GET['id']))
     exit();
 }
 
-// Cập nhật số lượng khi bấm nút "Cập nhật giỏ hàng"
 if (isset($_POST['btn_update_cart']) && isset($_POST['qty'])) {
     foreach ($_POST['qty'] as $variant_id => $new_qty) {
         $new_qty = (int)$new_qty;
-        if ($new_qty <= 0) {
-            unset($_SESSION['cart'][$variant_id]); // Nếu nhập số lượng 0 hoặc âm thì xóa luôn
-        } else {
-            $_SESSION['cart'][$variant_id] = $new_qty;
-        }
+        if ($new_qty <= 0) unset($_SESSION['cart'][$variant_id]); 
+        else $_SESSION['cart'][$variant_id] = $new_qty;
     }
     header("Location: cart.php");
     exit();
 }
 
-// 2. LẤY DỮ LIỆU ĐỂ HIỂN THỊ
+// 2. ĐỌC COOKIE TỪ JAVASCRIPT ĐỂ XÁC ĐỊNH % GIẢM GIÁ
+$discount_rate = isset($_COOKIE['user_discount']) ? (int)$_COOKIE['user_discount'] : 0;
+
+// 3. LẤY DỮ LIỆU ĐỂ HIỂN THỊ
 $cart_items = [];
 $grand_total = 0;
 
 if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
-    // Lấy tất cả các ID phiên bản đang có trong Session (Ví dụ: 5, 12, 18)
     $variant_ids = array_keys($_SESSION['cart']);
-    
-    // Biến mảng thành chuỗi để đưa vào câu lệnh SQL IN (Ví dụ: "5,12,18")
     $id_list = implode(',', $variant_ids);
 
-    // Dùng INNER JOIN để lấy dữ liệu từ cả bảng product_variants và products
     $sql = "SELECT pv.id as variant_id, pv.color, pv.version, pv.price, pv.stock, 
                    p.id as product_id, p.name, p.image 
             FROM product_variants pv 
@@ -49,18 +43,23 @@ if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
     if ($result && mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
             $v_id = $row['variant_id'];
-            
-            // Lấy số lượng khách đã chọn từ Session
             $qty_in_cart = $_SESSION['cart'][$v_id];
             
-            // Tính thành tiền cho dòng này
-            $subtotal = $qty_in_cart * $row['price'];
+            // --- TÍNH TOÁN GIÁ SAU KHI ÁP DỤNG MÃ KHU VỰC ---
+            $base_price = $row['price'];
+            $final_price = $base_price;
             
-            // Cộng dồn vào tổng tiền giỏ hàng
+            if ($discount_rate > 0) {
+                $final_price = $base_price - ($base_price * $discount_rate / 100);
+            }
+            
+            $subtotal = $qty_in_cart * $final_price;
             $grand_total += $subtotal;
             
-            // Nhét số lượng và thành tiền vào mảng dữ liệu để in ra HTML
+            // Lưu dữ liệu vào mảng
             $row['cart_qty'] = $qty_in_cart;
+            $row['base_price'] = $base_price;
+            $row['final_price'] = $final_price;
             $row['subtotal'] = $subtotal;
             
             $cart_items[] = $row;
@@ -133,14 +132,19 @@ if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
                                     </td>
                                     
                                     <td style="font-weight: 600;">
-                                        <?= number_format($item['price'], 0, ',', '.') ?> đ
+                                        <?php if ($discount_rate > 0): ?>
+                                            <span style="text-decoration: line-through; color: #999; font-size: 13px; font-weight: normal;"><?= number_format($item['base_price'], 0, ',', '.') ?> đ</span><br>
+                                            <span style="color: #d70018;"><?= number_format($item['final_price'], 0, ',', '.') ?> đ</span>
+                                        <?php else: ?>
+                                            <?= number_format($item['final_price'], 0, ',', '.') ?> đ
+                                        <?php endif; ?>
                                     </td>
                                     
                                     <td>
                                         <input type="number" name="qty[<?= $item['variant_id'] ?>]" value="<?= $item['cart_qty'] ?>" min="1" max="<?= $item['stock'] ?>" class="qty-input">
                                     </td>
                                     
-                                    <td style="color: #d70018; font-weight: bold;">
+                                    <td style="color: #d70018; font-weight: bold; font-size: 16px;">
                                         <?= number_format($item['subtotal'], 0, ',', '.') ?> đ
                                     </td>
                                     
@@ -163,6 +167,12 @@ if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
                 </form>
 
                 <div class="cart-summary">
+                    <?php if ($discount_rate > 0): ?>
+                        <div class="discount-badge">
+                            <i class="fa-solid fa-tags"></i> Đã áp dụng giảm giá <?= $discount_rate ?>% theo khu vực nhận hàng!
+                        </div>
+                    <?php endif; ?>
+                    
                     <h3>Tổng thanh toán</h3>
                     <div class="total-price"><?= number_format($grand_total, 0, ',', '.') ?> đ</div>
                     <p style="color: #777; font-size: 14px; margin-top: 10px;">(Đã bao gồm VAT nếu có)</p>

@@ -166,22 +166,8 @@ $result = mysqli_query($conn, $sql);
             
             <div class="product-grid">
                 <?php while ($row = mysqli_fetch_assoc($result)): 
-                    $current_price = $row['min_price'] ? $row['min_price'] : 0;
-                    $old_price = $current_price * 1.1; 
-                    $img_src = !empty($row['image']) ? 'assets/uploads/' . $row['image'] : 'https://via.placeholder.com/300x300?text=No+Image';
-                ?>
-                    <a href="detail.php?id=<?= $row['id'] ?>" class="product-card" style="text-decoration: none; color: inherit;">
-                        <div class="product-image">
-                            <img src="<?= htmlspecialchars($img_src) ?>" alt="<?= htmlspecialchars($row['name']) ?>">
-                        </div>
-                        <h3 class="product-name"><?= htmlspecialchars($row['name']) ?></h3>
-                        <div class="product-price">
-                            <span class="price-current"><?= $current_price > 0 ? number_format($current_price, 0, ',', '.') . 'đ' : 'Liên hệ' ?></span>
-                            <?php if ($current_price > 0): ?>
-                                <span class="price-old"><?= number_format($old_price, 0, ',', '.') ?>đ</span>
-                            <?php endif; ?>
-                        </div>
-                    </a>
+                    ?>
+                        <?php include("includes/product_card.php") ?>
                 <?php endwhile; ?>
             </div>
 

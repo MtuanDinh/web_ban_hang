@@ -108,27 +108,8 @@ if (isset($_GET['keyword']) && trim($_GET['keyword']) != "") {
         <?php if ($total_records > 0): ?>
             <div class="product-grid">
                 <?php while ($row = mysqli_fetch_assoc($result)): 
-                    $current_price = $row['min_price'] ? $row['min_price'] : 0;
-                    $old_price = $current_price * 1.1; 
-                    $discount_percent = 10;
-                    $img_src = !empty($row['image']) ? 'assets/uploads/' . $row['image'] : 'https://via.placeholder.com/300x300?text=No+Image';
                 ?>
-                    <a href="detail.php?id=<?= $row['id'] ?>" class="product-card" style="text-decoration: none; color: inherit;">
-                        <div class="card-badges">
-                            <span class="badge-discount">Giảm <?= $discount_percent ?>%</span>
-                        </div>
-                        <div class="product-image">
-                            <img src="<?= htmlspecialchars($img_src) ?>" alt="<?= htmlspecialchars($row['name']) ?>">
-                        </div>
-                        <h3 class="product-name"><?= htmlspecialchars($row['name']) ?></h3>
-                        <div class="product-price">
-                            <span class="price-current"><?= number_format($current_price, 0, ',', '.') ?>đ</span>
-                            <span class="price-old"><?= number_format($old_price, 0, ',', '.') ?>đ</span>
-                        </div>
-                        <div class="product-shipping">
-                            <i class="fa-solid fa-truck-fast"></i> Giao siêu tốc 2h
-                        </div>
-                    </a>
+                    <?php include("includes/product_card.php") ?>
                 <?php endwhile; ?>
             </div>
 
