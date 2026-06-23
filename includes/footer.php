@@ -20,9 +20,7 @@
     
 </ul>
 <div class="footer-info">
-            Công ty Cổ phần Thương Mại Tổng Hợp HTV - GPĐKKD: 0108075931 cấp tại Sở KH & ĐT TP. Hà Nội. Địa chỉ văn phòng: 543 Đường Nguyễn Trãi, Phường Thanh Liệt, Thành phố Hà Nội, Việt Nam. Điện thoại: 024.7303.0119.
-
-
+            Công ty Cổ phần Thương Mại Tổng Hợp DTA - GPĐKKD: 0xxxxxxxxx cấp tại Sở KH & ĐT TP. Hà Nội. Địa chỉ văn phòng: Thành phố Hà Nội, Việt Nam. Điện thoại: 0xx.xxxx.xxxx.
         </div>
 
         <div class="footer-badges">
