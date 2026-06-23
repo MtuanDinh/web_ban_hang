@@ -1,0 +1,210 @@
+/* CSS Giao diện Thanh toán giữ nguyên */
+.checkout-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 15px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.checkout-box {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f0f0f0;
+}
+
+.checkout-title {
+    font-size: 20px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #444;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+    font-size: 15px;
+    transition: 0.3s;
+    font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #d70018;
+    box-shadow: 0 0 5px rgba(215, 0, 24, 0.2);
+}
+
+.summary-item {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #eee;
+}
+
+.summary-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 3px;
+}
+
+.summary-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.summary-meta {
+    font-size: 12px;
+    color: #777;
+}
+
+.summary-price {
+    font-weight: bold;
+    color: #d70018;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.total-amount {
+    color: #d70018;
+    font-size: 26px;
+}
+
+.btn-place-order {
+    width: 100%;
+    padding: 16px;
+    background: #d70018;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 25px;
+}
+
+.btn-place-order:hover {
+    background: #b00012;
+}
+
+.msg-error {
+    background: #ffe8ea;
+    color: #d70018;
+    border: 1px solid #f5c2c7;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+/* CSS CHO MODAL THÀNH CÔNG */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 450px;
+    width: 90%;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-icon {
+    font-size: 75px;
+    color: #28a745;
+    margin-bottom: 20px;
+}
+
+.modal-content h2 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.modal-content p {
+    color: #555;
+    margin-bottom: 30px;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.btn-modal-ok {
+    display: inline-block;
+    background: #d70018;
+    color: white;
+    padding: 14px 40px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn-modal-ok:hover {
+    background: #b00012;
+    transform: translateY(-2px);
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

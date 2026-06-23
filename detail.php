@@ -120,11 +120,17 @@ if (!empty($product['gallery'])) {
                     </div>
 
                     <?php if (!empty($variants)): ?>
-                        <button type="submit" name="btn_add_cart" class="btn-add-cart">
-                            <i class="fa-solid fa-cart-plus"></i> Thêm Vào Giỏ Hàng
-                        </button>
+                        <div style="display: flex; gap: 15px; width: 100%;">
+                            <button type="submit" name="btn_add_cart" class="btn-add-cart" style="flex: 1; background: #fff; color: #d70018; border: 2px solid #d70018;">
+                                <i class="fa-solid fa-cart-plus"></i> Thêm Vào Giỏ
+                            </button>
+                            
+                            <button type="submit" name="btn_buy_now" class="btn-add-cart" style="flex: 1;">
+                                Mua Ngay
+                            </button>
+                        </div>
                     <?php else: ?>
-                        <button type="button" class="btn-add-cart" style="background: #ccc; cursor: not-allowed;" disabled>
+                        <button type="button" class="btn-add-cart" style="background: #ccc; cursor: not-allowed; width: 100%;" disabled>
                             Tạm Hết Hàng
                         </button>
                     <?php endif; ?>
