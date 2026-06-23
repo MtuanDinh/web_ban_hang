@@ -1,0 +1,121 @@
+.auth-container {
+    max-width: 450px;
+    margin: 60px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f0f0f0;
+}
+
+.auth-title {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #444;
+    font-size: 24px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}
+
+/* Cấu trúc mới cho ô mật khẩu */
+.password-wrapper {
+    position: relative;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+    transition: 0.3s;
+}
+
+/* Dịch chữ sang trái một chút để không bị đè lên icon con mắt */
+.password-wrapper input {
+    padding-right: 40px;
+}
+
+.form-group input:focus {
+    border-color: #d70018;
+    box-shadow: 0 0 5px rgba(215, 0, 24, 0.2);
+}
+
+/* CSS cho icon con mắt */
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.toggle-password:hover {
+    color: #d70018;
+}
+
+.btn-auth {
+    width: 100%;
+    padding: 14px;
+    background: #d70018;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.btn-auth:hover {
+    background: #b00012;
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.auth-links a {
+    color: #2f80ed;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.msg {
+    padding: 12px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.msg-error {
+    background: #ffe8ea;
+    color: #d70018;
+    border: 1px solid #f5c2c7;
+}
+
+.msg-success {
+    background: #d1e7dd;
+    color: #0f5132;
+    border: 1px solid #badbcc;
+}

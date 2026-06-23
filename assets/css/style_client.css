@@ -4,6 +4,10 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   padding: 0;
   display: flex;
@@ -611,14 +615,12 @@ nav ul .location-list li {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 15px;
+  align-content: start;
 }
 
 /* --- Thiết kế Card Sản Phẩm --- */
 
-.product-grid {
-  display: flex;
-  flex-wrap: wrap;
-}
+
 
 .product-card {
   background: #fff;

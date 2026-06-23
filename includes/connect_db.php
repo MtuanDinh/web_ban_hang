@@ -1,4 +1,7 @@
 <?php 
+    if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+    }
     $db_server = "localhost";
     $db_user = "root";
     $db_pass = "";

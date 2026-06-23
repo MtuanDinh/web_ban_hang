@@ -1,0 +1,222 @@
+.detail-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 15px;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+/* Cột trái: Bộ sưu tập ảnh */
+.detail-gallery {
+    flex: 0 0 420px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #f0f0f0;
+}
+
+/* Khung ảnh chính */
+.main-image-box {
+    width: 100%;
+    height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.main-image-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s;
+}
+
+.main-image-box img:hover {
+    transform: scale(1.05);
+}
+
+/* Thanh Thumbnail */
+.thumbnail-bar {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    justify-content: center;
+}
+
+.thumb-item {
+    width: 65px;
+    height: 65px;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    padding: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: 0.2s;
+}
+
+.thumb-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Hiệu ứng khi chọn hoặc hover ảnh nhỏ */
+.thumb-item:hover {
+    opacity: 1;
+}
+
+.thumb-item.active {
+    border-color: #d70018;
+    opacity: 1;
+}
+
+/* Làm đẹp thanh cuộn ngang nếu có quá nhiều ảnh */
+.thumbnail-bar::-webkit-scrollbar {
+    height: 5px;
+}
+
+.thumbnail-bar::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 10px;
+}
+
+.detail-gallery img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    transition: transform 0.3s;
+}
+
+.detail-gallery img:hover {
+    transform: scale(1.05);
+}
+
+/* Cột phải: Thông tin & Đặt hàng */
+.detail-info {
+    flex: 1;
+}
+
+.detail-info h1 {
+    font-size: 28px;
+    color: #333;
+    margin: 0 0 15px 0;
+}
+
+.price-box {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border: 1px solid #e0e0e0;
+}
+
+.price-box .current-price {
+    font-size: 32px;
+    color: #d70018;
+    font-weight: bold;
+}
+
+/* Form chọn Phiên bản */
+.variant-group {
+    margin-bottom: 20px;
+}
+
+.variant-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #444;
+}
+
+.variant-select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.variant-select:focus {
+    border-color: #d70018;
+}
+
+.qty-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.qty-group input {
+    width: 80px;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.btn-add-cart {
+    background: #d70018;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-add-cart:hover {
+    background: #b00012;
+}
+
+/* Bảng thông số kỹ thuật */
+.specs-container {
+    max-width: 1200px;
+    margin: 0 auto 60px auto;
+    padding: 0 15px;
+}
+
+.specs-box {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid #f0f0f0;
+}
+
+.specs-box h3 {
+    font-size: 20px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.specs-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.specs-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.specs-table td:first-child {
+    width: 30%;
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #555;
+}

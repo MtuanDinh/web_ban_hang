@@ -83,8 +83,8 @@ require_once("includes/connect_db.php");
         </div>
         <section class="product-section">
             <div class="section-header">
-                <h2>ĐIỆN THOẠI</h2>
-                <div class="filter-tags">
+                <h2>Sản phẩm đang bán</h2>
+                <div class="filter-tags" id="product-start">
                     <?php
                     $current_cat_id = isset($_GET['category_id']) ? (int)$_GET['category_id'] : 0;
 
@@ -97,7 +97,7 @@ require_once("includes/connect_db.php");
                             
                             $is_active = ($current_cat_id == $cat['id']) ? 'active' : '';
                             
-                            echo '<a href="?category_id=' . $cat['id'] . '" class="' . $is_active . '">' . htmlspecialchars($cat['name']) . '</a>';
+                            echo '<a href="?category_id=' . $cat['id'] . '#product-start" class="' . $is_active . '">' . htmlspecialchars($cat['name']) . '</a>';
                         }
                     } else {
                         echo '<a href="#">Chưa có danh mục</a>';
@@ -124,7 +124,7 @@ require_once("includes/connect_db.php");
 
                             $img_src = !empty($row['image']) ? 'assets/uploads/' . $row['image'] : 'https://via.placeholder.com/300x300?text=No+Image';
                     ?>
-                            <div class="product-card">
+                            <a href="detail.php?id=<?= $row['id'] ?>" class="product-card" style="text-decoration: none; color: inherit;">
                                 <div class="card-badges">
                                     <span class="badge-discount">Giảm <?= $discount_percent ?>%</span>
                                     <span class="badge-installment">Trả góp 0%</span>
@@ -136,7 +136,12 @@ require_once("includes/connect_db.php");
                                 <h3 class="product-name"><?= htmlspecialchars($row['name']) ?></h3>
 
                                 <div class="product-price">
-                                    <span class="price-current"><?= number_format($current_price, 0, ',', '.') ?>đ</span>
+                                    <span class="price-current">
+                                        <?php if($current_price != 0){ ?>
+                                            <?= number_format($current_price, 0, ',', '.') . "đ" ?>
+                                        <?php } else {
+                                            echo "Liên hệ";
+                                        } ?></span>
                                     <span class="price-old"><?= number_format($old_price, 0, ',', '.') ?>đ</span>
                                 </div>
                                 <div class="product-promo">
@@ -149,8 +154,8 @@ require_once("includes/connect_db.php");
                                     <div class="rating">⭐ 5</div>
                                     <div class="wishlist">♡ Yêu thích</div>
                                 </div>
-                            </div>
-                    <?php
+                            </a>
+                            <?php
                         }
                     } else {
                         echo "<p style='grid-column: 1 / -1; text-align: center; padding: 50px;'>Chưa có sản phẩm nào trong cửa hàng.</p>";
