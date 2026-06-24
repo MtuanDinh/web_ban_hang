@@ -1,0 +1,173 @@
+/* =========================================
+       CSS CHO FOOTER HIỆN ĐẠI
+       ========================================= */
+.main-footer {
+    background-color: #fff;
+    border-top: 4px solid #d70018;
+    /* Đường viền đỏ phân cách cực đẹp */
+    margin-top: 50px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.footer-top {
+    padding: 50px 0 30px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 30px;
+}
+
+.footer-logo {
+    height: 35px;
+    margin-bottom: 20px;
+    filter: grayscale(100%) opacity(80%);
+    /* Làm logo chìm xuống cho thanh lịch */
+    transition: 0.3s;
+}
+
+.footer-logo:hover {
+    filter: none;
+}
+
+.company-desc {
+    color: #555;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.contact-info {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: #555;
+    font-size: 13px;
+}
+
+.contact-info li {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.contact-info i {
+    color: #d70018;
+    margin-top: 3px;
+    font-size: 14px;
+}
+
+.footer-col h3 {
+    font-size: 15px;
+    color: #333;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.footer-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-list li {
+    margin-bottom: 12px;
+}
+
+.footer-list a {
+    color: #666;
+    text-decoration: none;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.footer-list a i {
+    font-size: 10px;
+    color: #ccc;
+    transition: 0.2s;
+}
+
+.footer-list a:hover {
+    color: #d70018;
+    padding-left: 5px;
+}
+
+.footer-list a:hover i {
+    color: #d70018;
+}
+
+.footer-badges-col img {
+    display: block;
+    max-height: 40px;
+    margin-bottom: 15px;
+}
+
+.payment-methods {
+    display: flex;
+    gap: 10px;
+    font-size: 30px;
+    color: #cbd5e1;
+}
+
+.footer-bottom {
+    background-color: #f8f9fa;
+    padding: 15px 0;
+    border-top: 1px solid #eee;
+}
+
+.bottom-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.copyright-text {
+    color: #888;
+    font-size: 12px;
+    margin: 0;
+}
+
+/* STYLE CHO NÚT BÍ MẬT */
+.secret-admin-link {
+    color: #d1d5db;
+    /* Màu xám rất nhạt, gần như tàng hình */
+    text-decoration: none;
+    font-size: 11px;
+    font-family: monospace;
+    transition: 0.3s;
+    padding: 2px 5px;
+}
+
+.secret-admin-link:hover {
+    color: #d70018;
+    /* Rê chuột vào sẽ sáng lên màu đỏ */
+    background: #ffe8ea;
+    border-radius: 4px;
+}
+
+/* RESPONSIVE CHO TABLET & MOBILE */
+@media screen and (max-width: 992px) {
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .bottom-container {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}

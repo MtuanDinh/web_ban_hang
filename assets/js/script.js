@@ -158,3 +158,138 @@ function applyRegionalDiscount(discountRate) {
         updatePrice();
     }
 }
+
+// ========================================================
+// XỬ LÝ LỌC SẢN PHẨM BẰNG AJAX (KHÔNG LOAD LẠI TRANG)
+// ========================================================
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // ----------------------------------------------------
+    // 1. DÀNH CHO TRANG CHỦ (index.php) - Click vào thẻ <a>
+    // ----------------------------------------------------
+    const indexFilterTags = document.querySelector('.filter-tags');
+    if (indexFilterTags) {
+        function attachIndexEvents() {
+            const links = document.querySelectorAll('.filter-tags a');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault(); // Chặn load trang
+                    loadIndexAjax(this.getAttribute('href'));
+                });
+            });
+        }
+
+        function loadIndexAjax(url) {
+            const productsArea = document.querySelector('.product-layout'); 
+            productsArea.style.position = 'relative';
+            
+            // Bật Loading
+            let loader = document.getElementById('ajax-loader');
+            if (!loader) {
+                productsArea.insertAdjacentHTML('beforeend', `
+                    <div id="ajax-loader" class="ajax-loader-overlay">
+                        <div class="spinner"></div>
+                    </div>
+                `);
+                loader = document.getElementById('ajax-loader');
+            }
+            loader.classList.add('active');
+
+            // TUYỆT CHIÊU: Ép thời gian chờ tối thiểu 600ms (0.6 giây) để xem được animation
+            const minDelay = new Promise(resolve => setTimeout(resolve, 600));
+
+            // Bắt buộc cả 2 tác vụ (Fetch Data VÀ Đợi 600ms) cùng hoàn thành mới chạy tiếp
+            Promise.all([fetch(url), minDelay])
+                .then(([response]) => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    const newGrid = doc.querySelector('.product-grid');
+                    const newTags = doc.querySelector('.filter-tags');
+                    
+                    if (newGrid && newTags) {
+                        document.querySelector('.product-grid').innerHTML = newGrid.innerHTML;
+                        document.querySelector('.filter-tags').innerHTML = newTags.innerHTML;
+                        
+                        attachIndexEvents(); // Gắn lại sự kiện click cho các nút mới
+                    }
+                    
+                    window.history.pushState({path: url}, '', url);
+                })
+                .catch(err => console.error("Lỗi AJAX: ", err))
+                .finally(() => {
+                    // Tắt Loading
+                    if (loader) loader.classList.remove('active');
+                });
+        }
+        
+        attachIndexEvents();
+    }
+
+    // ----------------------------------------------------
+    // 2. DÀNH CHO TRANG TẤT CẢ SẢN PHẨM - Gửi bằng <form>
+    // ----------------------------------------------------
+    const filterForm = document.querySelector('.filter-sidebar form');
+    if (filterForm) {
+        function attachFormEvents() {
+            const currentForm = document.querySelector('.filter-sidebar form');
+            if (currentForm) {
+                currentForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    const params = new URLSearchParams(formData).toString();
+                    const actionUrl = this.getAttribute('action') || window.location.pathname;
+                    loadFormAjax(actionUrl + '?' + params);
+                });
+            }
+        }
+
+        function loadFormAjax(url) {
+            const productsArea = document.querySelector('.products-area');
+            if(!productsArea) return;
+
+            productsArea.style.position = 'relative';
+            
+            let loader = document.getElementById('ajax-loader');
+            if (!loader) {
+                productsArea.insertAdjacentHTML('beforeend', `
+                    <div id="ajax-loader" class="ajax-loader-overlay">
+                        <div class="spinner"></div>
+                    </div>
+                `);
+                loader = document.getElementById('ajax-loader');
+            }
+            loader.classList.add('active');
+
+            // Ép thời gian chờ tối thiểu 600ms
+            const minDelay = new Promise(resolve => setTimeout(resolve, 600));
+
+            Promise.all([fetch(url), minDelay])
+                .then(([response]) => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    const newGrid = doc.querySelector('.product-grid');
+                    const newSidebar = doc.querySelector('.filter-sidebar');
+                    
+                    if (newGrid && newSidebar) {
+                        document.querySelector('.product-grid').innerHTML = newGrid.innerHTML;
+                        document.querySelector('.filter-sidebar').innerHTML = newSidebar.innerHTML;
+                        attachFormEvents();
+                    }
+                    window.history.pushState({path: url}, '', url);
+                })
+                .finally(() => {
+                    if (loader) loader.classList.remove('active');
+                });
+        }
+        
+        attachFormEvents();
+    }
+
+    window.addEventListener('popstate', function() {
+        window.location.reload(); 
+    });
+});

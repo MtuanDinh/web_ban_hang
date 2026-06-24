@@ -220,3 +220,252 @@
     font-weight: 600;
     color: #555;
 }
+
+
+/* CSS GIAO DIỆN NÂNG CẤP CHO TRANG CHI TIẾT */
+.product-title-area {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.product-title-area h1 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.top-rating {
+    font-size: 14px;
+    color: #f59e0b;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.top-rating a {
+    color: #2f80ed;
+    text-decoration: none;
+}
+
+/* Bảng Chính sách bán hàng */
+.store-policies {
+    background: #f8f9fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 25px;
+}
+
+.store-policies h4 {
+    margin: 0 0 12px 0;
+    color: #d70018;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.store-policies ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.store-policies li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #444;
+    line-height: 1.5;
+}
+
+.store-policies li i {
+    color: #10b981;
+    font-size: 15px;
+    margin-top: 2px;
+}
+
+/* Bố cục 2 cột dưới cùng (Bình luận & Thông số) */
+.bottom-layout {
+    display: flex;
+    gap: 30px;
+    margin-top: 40px;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 15px;
+}
+
+.reviews-section {
+    flex: 2;
+    background: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.specs-section {
+    flex: 1;
+    background: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 20px;
+}
+
+/* Giao diện Bình luận */
+.review-header-title {
+    font-size: 18px;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.review-form {
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border: 1px solid #eee;
+}
+
+.rating-select {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    outline: none;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.review-textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    font-family: inherit;
+    resize: vertical;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.btn-submit-review {
+    background: #d70018;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-submit-review:hover {
+    background: #c00015;
+}
+
+.login-to-review {
+    background: #fff3cd;
+    color: #856404;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    text-align: center;
+    border: 1px solid #ffeeba;
+}
+
+.review-item {
+    display: flex;
+    gap: 15px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px dashed #eee;
+}
+
+.review-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.rev-avatar {
+    font-size: 40px;
+    color: #cbd5e1;
+}
+
+.rev-name {
+    font-weight: bold;
+    color: #333;
+    margin-right: 10px;
+}
+
+.rev-date {
+    font-size: 12px;
+    color: #999;
+}
+
+.rev-stars {
+    margin: 5px 0;
+    font-size: 13px;
+    color: #f59e0b;
+}
+
+.rev-text {
+    color: #555;
+    line-height: 1.6;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Responsive 2 cột */
+@media screen and (max-width: 992px) {
+    .bottom-layout {
+        flex-direction: column;
+    }
+
+    .reviews-section,
+    .specs-section {
+        width: 100%;
+        position: static;
+    }
+}
+
+/* Nút Bộ Lọc Sao */
+.review-filter {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.btn-filter-star {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.btn-filter-star:hover {
+    border-color: #d70018;
+    color: #d70018;
+}
+
+.btn-filter-star.active {
+    border-color: #d70018;
+    color: #d70018;
+    background: #ffe8ea;
+    font-weight: bold;
+}

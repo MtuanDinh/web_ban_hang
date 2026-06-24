@@ -1,42 +1,42 @@
 <?php
-// Bật tính năng Session để sử dụng bộ nhớ Giỏ hàng
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
+require_once("includes/connect_db.php");
+
+if (!isset($_SESSION['user_client'])) {
+    $_SESSION['flash_msg'] = "Bạn cần đăng nhập để có thể thêm sản phẩm vào giỏ!";
+    header("Location: login.php");
+    exit();
 }
 
-// Kiểm tra xem khách hàng có bấm 1 trong 2 nút (Thêm giỏ / Mua ngay) hay không
 if (isset($_POST['btn_add_cart']) || isset($_POST['btn_buy_now'])) {
-    
-    // Lấy ID phiên bản và số lượng người dùng vừa chọn
-    $variant_id = (int)$_POST['variant_id'];
+    $user_id = $_SESSION['user_client']['id'];
+    $variant_id = (int)$_POST['variant_id']; // Đã chuyển sang dùng variant_id
     $quantity = (int)$_POST['quantity'];
 
-    // 1. Nếu hệ thống chưa có giỏ hàng, hãy tạo một chiếc giỏ trống
-    if (!isset($_SESSION['cart'])) {
-        $_SESSION['cart'] = [];
-    }
+    // Kiểm tra xem sản phẩm này đã có trong giỏ hàng của user chưa
+    $sql_check = "SELECT id, quantity FROM cart WHERE user_id = $user_id AND variant_id = $variant_id";
+    $res_check = mysqli_query($conn, $sql_check);
 
-    // 2. Logic thêm hàng vào giỏ (Cộng dồn nếu đã có, tạo mới nếu chưa có)
-    if (isset($_SESSION['cart'][$variant_id])) {
-        $_SESSION['cart'][$variant_id] += $quantity;
+    if ($res_check && mysqli_num_rows($res_check) > 0) {
+        // Nếu đã có -> CỘNG DỒN số lượng
+        $row = mysqli_fetch_assoc($res_check);
+        $new_qty = $row['quantity'] + $quantity;
+        $cart_id = $row['id'];
+        mysqli_query($conn, "UPDATE cart SET quantity = $new_qty WHERE id = $cart_id");
     } else {
-        $_SESSION['cart'][$variant_id] = $quantity;
+        // Nếu chưa có -> THÊM MỚI
+        mysqli_query($conn, "INSERT INTO cart (user_id, variant_id, quantity) VALUES ($user_id, $variant_id, $quantity)");
     }
 
-    // 3. Xử lý điều hướng thông minh dựa vào nút bấm
     if (isset($_POST['btn_buy_now'])) {
-        // Nếu bấm "Mua Ngay" -> Chuyển thẳng tới trang Thanh toán
         header("Location: checkout.php");
         exit();
     } else {
-        // Nếu bấm "Thêm Vào Giỏ" -> Chuyển về trang Giỏ hàng kèm thông báo
         $_SESSION['flash_msg'] = "Đã thêm sản phẩm vào giỏ hàng thành công!";
         header("Location: cart.php");
         exit();
     }
-    
 } else {
-    // Nếu có ai đó cố tình gõ thẳng đường dẫn add_to_cart.php lên URL thì đá về trang chủ
     header("Location: index.php");
     exit();
 }

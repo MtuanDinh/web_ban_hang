@@ -231,7 +231,6 @@ $result_cats = mysqli_query($conn, $sql_cats);
     </main>
 
     <?php include "includes/footer.php"; ?>
-    <script src="assets/js/script.js"></script>
 </body>
 
 </html>

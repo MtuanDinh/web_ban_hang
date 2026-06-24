@@ -1,0 +1,128 @@
+/* CSS GIAO DIỆN FLASH SALE & PHỤ KIỆN TỐI ƯU */
+.flash-sale-wrapper {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 25px;
+    background: linear-gradient(135deg, #d70018 0%, #ff5252 100%);
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(215, 0, 24, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.flash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.flash-title {
+    color: #fff;
+    font-size: 26px;
+    font-weight: 900;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Đồng hồ đếm ngược */
+.countdown-timer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+}
+
+.cd-text {
+    color: #fff;
+    font-size: 15px;
+    margin-right: 5px;
+}
+
+.cd-box {
+    background: #000;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.cd-dot {
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.flash-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    position: relative;
+    z-index: 2;
+}
+
+.flash-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    transition: 0.3s;
+    text-decoration: none;
+    display: block;
+}
+
+.flash-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.flash-badge {
+    position: absolute;
+    top: 10px;
+    left: -5px;
+    background: #ffcc00;
+    color: #d70018;
+    font-weight: bold;
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 0 5px 5px 0;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    z-index: 3;
+}
+
+/* Chỉnh lại bố cục phụ kiện */
+.accessory-grid-products {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.acc-icon-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.acc-icon-list .accessory-item {
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+    padding: 15px 10px;
+}
+
+.acc-icon-list .accessory-item img {
+    width: 45px;
+    height: 45px;
+}

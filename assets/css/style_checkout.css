@@ -1,77 +1,140 @@
-/* CSS Giao diện Thanh toán giữ nguyên */
+/* Nền xám nhạt làm nổi bật các Card */
+.checkout-page-wrapper {
+    background-color: #f5f5f7;
+    padding: 30px 0 50px 0;
+    min-height: calc(100vh - 200px);
+}
+
 .checkout-container {
-    max-width: 1200px;
-    margin: 40px auto;
+    max-width: 1100px;
+    margin: 0 auto;
     padding: 0 15px;
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 30px;
+    grid-template-columns: 7fr 5fr;
+    /* Tỷ lệ cột cân đối hơn */
+    gap: 25px;
     align-items: start;
 }
 
-.checkout-box {
+/* Thiết kế dạng Thẻ (Card) hiện đại */
+.checkout-card {
     background: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
-    border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px solid #ebebeb;
 }
 
-.checkout-title {
-    font-size: 20px;
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 15px;
-    margin-bottom: 20px;
+.checkout-card-title {
+    font-size: 16px;
     color: #333;
     font-weight: 700;
     text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.checkout-card-title i {
+    color: #d70018;
+    font-size: 18px;
+}
+
+/* Tối ưu Form nhập liệu */
+.form-row {
+    display: flex;
+    gap: 15px;
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
+    flex: 1;
 }
 
 .form-group label {
     display: block;
     font-weight: 600;
     margin-bottom: 8px;
-    color: #444;
-    font-size: 14px;
+    color: #555;
+    font-size: 13px;
 }
 
 .form-group input,
 .form-group textarea {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    padding: 12px 15px;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
     outline: none;
-    font-size: 15px;
-    transition: 0.3s;
-    font-family: inherit;
+    font-size: 14px;
+    transition: 0.2s;
+    background: #fafafa;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
     border-color: #d70018;
-    box-shadow: 0 0 5px rgba(215, 0, 24, 0.2);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(215, 0, 24, 0.1);
 }
 
+/* Card Phương thức thanh toán */
+.payment-method-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid #d70018;
+    background: #fff9fa;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.payment-method-card img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.discount-alert {
+    background: #e8f5e9;
+    color: #1b5e20;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+/* HIỆU ỨNG STICKY CHO CỘT BÊN PHẢI */
+.order-summary-sticky {
+    position: sticky;
+    top: 20px;
+}
+
+/* Các item trong giỏ hàng */
 .summary-item {
     display: flex;
     gap: 15px;
-    margin-bottom: 15px;
     padding-bottom: 15px;
+    margin-bottom: 15px;
     border-bottom: 1px dashed #eee;
 }
 
 .summary-item img {
-    width: 60px;
-    height: 60px;
+    width: 65px;
+    height: 65px;
     object-fit: contain;
-    border: 1px solid #eee;
-    border-radius: 5px;
-    padding: 3px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 5px;
 }
 
 .summary-name {
@@ -79,6 +142,7 @@
     font-weight: 600;
     color: #333;
     margin-bottom: 4px;
+    line-height: 1.4;
 }
 
 .summary-meta {
@@ -93,18 +157,29 @@
     margin-top: 5px;
 }
 
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #555;
+}
+
 .total-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
-    font-size: 18px;
+    padding-top: 15px;
+    margin-top: 15px;
+    border-top: 2px solid #f0f0f0;
+    font-size: 16px;
     font-weight: bold;
+    color: #333;
 }
 
 .total-amount {
     color: #d70018;
-    font-size: 26px;
+    font-size: 24px;
 }
 
 .btn-place-order {
@@ -112,30 +187,23 @@
     padding: 16px;
     background: #d70018;
     color: #fff;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
+    text-transform: uppercase;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     transition: 0.3s;
-    margin-top: 25px;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(215, 0, 24, 0.2);
 }
 
 .btn-place-order:hover {
     background: #b00012;
+    transform: translateY(-2px);
 }
 
-.msg-error {
-    background: #ffe8ea;
-    color: #d70018;
-    border: 1px solid #f5c2c7;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    font-weight: 500;
-}
-
-/* CSS CHO MODAL THÀNH CÔNG */
+/* Giữ nguyên Modal cũ của bạn */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -156,27 +224,27 @@
     text-align: center;
     max-width: 450px;
     width: 90%;
-    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .modal-icon {
     font-size: 75px;
-    color: #28a745;
+    color: #10b981;
     margin-bottom: 20px;
 }
 
 .modal-content h2 {
     color: #333;
-    margin-bottom: 15px;
-    font-size: 26px;
+    margin-bottom: 10px;
+    font-size: 24px;
     font-weight: 800;
 }
 
 .modal-content p {
-    color: #555;
-    margin-bottom: 30px;
-    font-size: 16px;
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 15px;
     line-height: 1.6;
 }
 
@@ -184,8 +252,8 @@
     display: inline-block;
     background: #d70018;
     color: white;
-    padding: 14px 40px;
-    font-size: 16px;
+    padding: 12px 35px;
+    font-size: 15px;
     font-weight: bold;
     border-radius: 8px;
     text-decoration: none;
@@ -206,5 +274,16 @@
     100% {
         transform: scale(1);
         opacity: 1;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .checkout-container {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
     }
 }

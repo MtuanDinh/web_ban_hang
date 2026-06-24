@@ -33,35 +33,43 @@ if ($res_nav_hot && mysqli_num_rows($res_nav_hot) > 0) {
         $nav_hot[] = $row;
     }
 }
+
+// 4. Đếm số lượng sản phẩm trong Giỏ hàng (Lấy từ Database) để hiển thị lên Navbar
+$cart_count = 0;
+if (isset($_SESSION['user_client'])) {
+    $u_id = (int)$_SESSION['user_client']['id'];
+    $sql_count = "SELECT SUM(quantity) as total_items FROM cart WHERE user_id = $u_id";
+    $res_count = mysqli_query($conn, $sql_count);
+    if ($res_count) {
+        $row_count = mysqli_fetch_assoc($res_count);
+        $cart_count = $row_count['total_items'] ? $row_count['total_items'] : 0;
+    }
+}
 ?>
 
-<nav>
+<!-- THÊM CLASS 'sticky-nav' ĐỂ NAVBAR DÍNH TRÊN ĐỈNH -->
+<nav class="sticky-nav">
     <ul>
-        <a href="/web_ban_hang/index.php"><li><img src="assets/image/smartphone-anhlogo.png" alt=""></li></a>
+        <a href="index.php"><li><img src="assets/image/smartphone-anhlogo.png" alt="Logo" style="width: 25px;"></li></a>
 
         <li class="category-dropdown">
             <a href="#" style="cursor: default;"><i class="fa-solid fa-list"></i> Danh mục <i class="fa-solid fa-angle-down"></i></a>
             
             <div class="mega-menu">
                 <ul class="mega-sidebar">
+                    <!-- ... (Giữ nguyên toàn bộ phần mega-item Điện thoại và Phụ kiện cũ của bạn) ... -->
                     <li class="mega-item">
                         <a href="category_phone.php">
                             <span><i class="fa-solid fa-mobile-screen-button"></i> Điện thoại, Tablet</span> 
                             <i class="fa-solid fa-angle-right"></i>
                         </a>
-                        
                         <div class="mega-content">
                             <div class="mega-col">
                                 <h4>Hãng điện thoại</h4>
-                                <?php if (!empty($nav_phones)): ?>
-                                    <?php foreach ($nav_phones as $brand): ?>
-                                        <a href="category_phone.php?brand=<?= $brand['id'] ?>"><?= htmlspecialchars($brand['name']) ?></a>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <a href="#">Đang cập nhật...</a>
-                                <?php endif; ?>
+                                <?php if (!empty($nav_phones)): foreach ($nav_phones as $brand): ?>
+                                    <a href="category_phone.php?brand=<?= $brand['id'] ?>"><?= htmlspecialchars($brand['name']) ?></a>
+                                <?php endforeach; else: echo '<a href="#">Đang cập nhật...</a>'; endif; ?>
                             </div>
-                            
                             <div class="mega-col">
                                 <h4>Mức giá</h4>
                                 <a href="category_phone.php?price=duoi-5">Dưới 5 triệu</a>
@@ -69,22 +77,16 @@ if ($res_nav_hot && mysqli_num_rows($res_nav_hot) > 0) {
                                 <a href="category_phone.php?price=15-25">Từ 15 - 25 triệu</a>
                                 <a href="category_phone.php?price=tren-25">Trên 25 triệu</a>
                             </div>
-                            
                             <div class="mega-col">
                                 <h4>Sản phẩm Mới ⚡</h4>
-                                <?php if (!empty($nav_hot)): ?>
-                                    <?php foreach ($nav_hot as $hot_prod): ?>
-                                        <a href="detail.php?id=<?= $hot_prod['id'] ?>">
-                                            <?= htmlspecialchars($hot_prod['name']) ?> <span class="badge-hot">MỚI</span>
-                                        </a>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <a href="#">Chưa có sản phẩm</a>
-                                <?php endif; ?>
+                                <?php if (!empty($nav_hot)): foreach ($nav_hot as $hot_prod): ?>
+                                    <a href="detail.php?id=<?= $hot_prod['id'] ?>">
+                                        <?= htmlspecialchars($hot_prod['name']) ?> <span class="badge-hot">MỚI</span>
+                                    </a>
+                                <?php endforeach; else: echo '<a href="#">Chưa có sản phẩm</a>'; endif; ?>
                             </div>
                         </div>
                     </li>
-
                     <li class="mega-item">
                         <a href="category_accessory.php">
                             <span><i class="fa-solid fa-headphones"></i> Phụ kiện</span>
@@ -93,13 +95,9 @@ if ($res_nav_hot && mysqli_num_rows($res_nav_hot) > 0) {
                         <div class="mega-content">
                             <div class="mega-col">
                                 <h4>Loại phụ kiện</h4>
-                                <?php if (!empty($nav_acc)): ?>
-                                    <?php foreach ($nav_acc as $acc): ?>
-                                        <a href="category_accessory.php?type=<?= $acc['id'] ?>"><?= htmlspecialchars($acc['name']) ?></a>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <a href="#">Đang cập nhật...</a>
-                                <?php endif; ?>
+                                <?php if (!empty($nav_acc)): foreach ($nav_acc as $acc): ?>
+                                    <a href="category_accessory.php?type=<?= $acc['id'] ?>"><?= htmlspecialchars($acc['name']) ?></a>
+                                <?php endforeach; else: echo '<a href="#">Đang cập nhật...</a>'; endif; ?>
                             </div>
                         </div>
                     </li>
@@ -109,32 +107,68 @@ if ($res_nav_hot && mysqli_num_rows($res_nav_hot) > 0) {
 
         <li><a href="#" id="btn-location"><i class="fa-solid fa-location-crosshairs"> </i> <span id="location-text">Vị trí</span> <i class="fa-solid fa-angle-down"></i></a></li>
         
-        <form class="search-box" action="search.php" method="GET" style="display: inline-flex; align-items: center;">
+        <!-- THANH TÌM KIẾM -->
+        <form class="search-box" action="search.php" method="GET" style="display: inline-flex; align-items: center; width: 35%;">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" name="keyword" placeholder="Bạn muốn mua gì hôm nay?">
         </form>
 
+        <!-- NÚT GIỎ HÀNG RIÊNG BIỆT (LUÔN HIỂN THỊ CÙNG BADGE) -->
+        <li>
+            <a href="cart.php" class="nav-cart-btn">
+                <i class="fa-solid fa-cart-shopping"></i> Giỏ hàng
+                <?php if ($cart_count > 0): ?>
+                    <span class="cart-badge"><?= $cart_count ?></span>
+                <?php endif; ?>
+            </a>
+        </li>
+
+        <!-- KHU VỰC USER (ĐÃ ĐƯỢC LÀM GỌN) -->
         <?php if (isset($_SESSION['user_client'])): ?>
             <li class="user-dropdown" style="background-color: transparent;">
                 <a href="#" style="color: white; font-weight: 600; cursor: default;">
                     <i class="fa-regular fa-circle-user"></i> 
-                    Chào, <?= htmlspecialchars($_SESSION['user_client']['name']) ?> 
+                    Chào, <?= htmlspecialchars(explode(' ', trim($_SESSION['user_client']['name']))[0]) ?> <!-- Chỉ lấy tên gọi cho gọn -->
                     <i class="fa-solid fa-caret-down" style="font-size: 12px; margin-left: 5px;"></i>
                 </a>
                 
                 <div class="dropdown-content">
-                    <a href="cart.php"><i class="fa-solid fa-cart-shopping"></i> Giỏ hàng của tôi</a>
                     <a href="my_orders.php"><i class="fa-solid fa-clipboard-list"></i> Đơn mua của tôi</a>
                     <a href="logout.php" style="color: #dc3545 !important; border-bottom: none;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a>
                 </div>
             </li>
         <?php else: ?>
-            <li><a href="cart.php">Giỏ hàng <i class="fa-solid fa-cart-shopping"></i></a></li>
             <li><a href="login.php">Đăng nhập <i class="fa-regular fa-circle-user"></i></a></li>
         <?php endif; ?>
 
         <style>
-            /* CSS CHO USER DROPDOWN */
+            /* STICKY NAVBAR: Dán chặt thanh menu trên đỉnh màn hình */
+            .sticky-nav {
+                position: sticky;
+                top: 0;
+                z-index: 9999; /* Đảm bảo luôn nằm trên các đối tượng khác */
+                box-shadow: 0 4px 15px rgba(0,0,0,0.15); /* Đổ bóng nhẹ cho đẹp */
+            }
+
+            /* CSS CHUẨN CHO BADGE GIỎ HÀNG */
+            .nav-cart-btn { position: relative; }
+            .cart-badge {
+                position: absolute;
+                top: -5px;
+                right: -10px;
+                background-color: #ffc107; /* Màu vàng nổi bật */
+                color: #d70018; /* Chữ đỏ */
+                font-size: 11px;
+                font-weight: 900;
+                padding: 2px 6px;
+                border-radius: 50%;
+                border: 2px solid rgb(223, 60, 71); /* Viền tiệp màu với Navbar */
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+            @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+
+            /* ... (Giữ nguyên toàn bộ CSS của .user-dropdown và .mega-menu cũ của bạn ở dưới đây) ... */
             .user-dropdown { position: relative; display: inline-block; padding: 0 10px; }
             .dropdown-content { display: none; position: absolute; top: 100%; right: 0; background-color: #fff; min-width: 200px; box-shadow: 0px 8px 20px rgba(0,0,0,0.15); z-index: 1000; border-radius: 8px; overflow: hidden; border: 1px solid #eee; }
             .user-dropdown:hover .dropdown-content { display: block; animation: fadeInDown 0.3s ease; }
@@ -144,47 +178,16 @@ if ($res_nav_hot && mysqli_num_rows($res_nav_hot) > 0) {
             .dropdown-content a:hover i { color: #d70018; }
             @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-            /* CSS CHO MEGA MENU CỰC XỊN */
-            /* =========================================
-               CSS CHO MEGA MENU CỰC XỊN (ĐÃ FIX LỆCH NÚT)
-               ========================================= */
-               
-            /* Trả lại vị trí cân bằng hoàn hảo cho nút đỏ Danh mục */
-            .category-dropdown { 
-                position: relative; 
-            }
-            
-            .category-dropdown:hover .mega-menu { 
-                display: block; 
-                animation: fadeInDown 0.2s ease; 
-            }
-            
-            .mega-menu { 
-                display: none; position: absolute; top: 100%; left: 0; 
-                background: #fff; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-                z-index: 1000; border: 1px solid #eee; width: 250px; 
-            }
-
-            /* TUYỆT CHIÊU: Cầu nối tàng hình giúp rê chuột không bị rớt menu */
-            .mega-menu::before {
-                content: "";
-                position: absolute;
-                top: -15px; /* Vươn lên trên 15px để hứng chuột */
-                left: 0;
-                width: 100%;
-                height: 15px;
-                background: transparent;
-            }
-
-            /* ... (Các đoạn CSS của .mega-sidebar, .mega-item, .mega-content ở dưới bạn giữ nguyên nhé) ... */
+            .category-dropdown { position: relative; }
+            .category-dropdown:hover .mega-menu { display: block; animation: fadeInDown 0.2s ease; }
+            .mega-menu { display: none; position: absolute; top: 100%; left: 0; background: #fff; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 1000; border: 1px solid #eee; width: 250px; }
+            .mega-menu::before { content: ""; position: absolute; top: -15px; left: 0; width: 100%; height: 15px; background: transparent; }
             .mega-sidebar { list-style: none; padding: 10px 0; margin: 0; }
             .mega-item { position: static; } 
             .mega-item > a { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; color: #333; text-decoration: none; font-weight: 500; font-size: 15px; transition: 0.2s; }
             .mega-item > a span i { width: 25px; color: #666; text-align: left;}
             .mega-item:hover > a { background: #f8f9fa; color: #d70018; }
             .mega-item:hover > a span i, .mega-item:hover > a i.fa-angle-right { color: #d70018; }
-
-            /* VÙNG NỘI DUNG SIÊU LỚN (MEGA CONTENT) */
             .mega-content { display: none; position: absolute; top: 0; left: 250px; background: #fff; width: 700px; min-height: 100%; border-radius: 0 8px 8px 8px; border-left: 1px solid #eee; padding: 25px; box-shadow: 5px 10px 30px rgba(0,0,0,0.05); }
             .mega-item:hover .mega-content { display: flex; gap: 40px; }
             .mega-col { flex: 1; }
@@ -195,6 +198,8 @@ if ($res_nav_hot && mysqli_num_rows($res_nav_hot) > 0) {
         </style>
     </ul>
 </nav>
+
+<!-- Giữ nguyên phần <div class="modal-location"> bên dưới của bạn -->
 <div class="modal-location">
     <div class="modal-location-content">
         <div class="modal-header">
@@ -221,4 +226,3 @@ if ($res_nav_hot && mysqli_num_rows($res_nav_hot) > 0) {
         </div>
     </div>
 </div>
-<script src="assets/js/script.js"></script>

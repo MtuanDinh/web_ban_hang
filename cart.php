@@ -1,12 +1,18 @@
 <?php
 require_once("includes/connect_db.php");
 
-// 1. XỬ LÝ CÁC THAO TÁC CẬP NHẬT/XÓA TRONG GIỎ HÀNG
+if (!isset($_SESSION['user_client'])) {
+    $_SESSION['flash_msg'] = "Vui lòng đăng nhập để xem và sử dụng giỏ hàng!";
+    header("Location: login.php");
+    exit();
+}
+
+$user_id = $_SESSION['user_client']['id'];
+
+// 1. XỬ LÝ CẬP NHẬT/XÓA TRỰC TIẾP TRÊN DATABASE
 if (isset($_GET['action']) && $_GET['action'] == 'remove' && isset($_GET['id'])) {
-    $remove_id = (int)$_GET['id'];
-    if (isset($_SESSION['cart'][$remove_id])) {
-        unset($_SESSION['cart'][$remove_id]);
-    }
+    $remove_variant_id = (int)$_GET['id'];
+    mysqli_query($conn, "DELETE FROM cart WHERE user_id = $user_id AND variant_id = $remove_variant_id");
     header("Location: cart.php");
     exit();
 }
@@ -14,8 +20,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'remove' && isset($_GET['id']))
 if (isset($_POST['btn_update_cart']) && isset($_POST['qty'])) {
     foreach ($_POST['qty'] as $variant_id => $new_qty) {
         $new_qty = (int)$new_qty;
-        if ($new_qty <= 0) unset($_SESSION['cart'][$variant_id]); 
-        else $_SESSION['cart'][$variant_id] = $new_qty;
+        $variant_id = (int)$variant_id;
+        
+        if ($new_qty <= 0) {
+            mysqli_query($conn, "DELETE FROM cart WHERE user_id = $user_id AND variant_id = $variant_id");
+        } else {
+            mysqli_query($conn, "UPDATE cart SET quantity = $new_qty WHERE user_id = $user_id AND variant_id = $variant_id");
+        }
     }
     header("Location: cart.php");
     exit();
@@ -24,46 +35,38 @@ if (isset($_POST['btn_update_cart']) && isset($_POST['qty'])) {
 // 2. ĐỌC COOKIE TỪ JAVASCRIPT ĐỂ XÁC ĐỊNH % GIẢM GIÁ
 $discount_rate = isset($_COOKIE['user_discount']) ? (int)$_COOKIE['user_discount'] : 0;
 
-// 3. LẤY DỮ LIỆU ĐỂ HIỂN THỊ
+// 3. LẤY DỮ LIỆU BẰNG CÁCH JOIN 3 BẢNG (Cart -> Variants -> Products)
 $cart_items = [];
 $grand_total = 0;
 
-if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
-    $variant_ids = array_keys($_SESSION['cart']);
-    $id_list = implode(',', $variant_ids);
+$sql = "SELECT c.quantity as cart_qty, pv.id as variant_id, pv.color, pv.version, pv.price, pv.stock, 
+               p.id as product_id, p.name, p.image 
+        FROM cart c 
+        JOIN product_variants pv ON c.variant_id = pv.id 
+        JOIN products p ON pv.product_id = p.id 
+        WHERE c.user_id = $user_id
+        ORDER BY c.created_at DESC";
+        
+$result = mysqli_query($conn, $sql);
 
-    $sql = "SELECT pv.id as variant_id, pv.color, pv.version, pv.price, pv.stock, 
-                   p.id as product_id, p.name, p.image 
-            FROM product_variants pv 
-            INNER JOIN products p ON pv.product_id = p.id 
-            WHERE pv.id IN ($id_list)";
-            
-    $result = mysqli_query($conn, $sql);
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $v_id = $row['variant_id'];
-            $qty_in_cart = $_SESSION['cart'][$v_id];
-            
-            // --- TÍNH TOÁN GIÁ SAU KHI ÁP DỤNG MÃ KHU VỰC ---
-            $base_price = $row['price'];
-            $final_price = $base_price;
-            
-            if ($discount_rate > 0) {
-                $final_price = $base_price - ($base_price * $discount_rate / 100);
-            }
-            
-            $subtotal = $qty_in_cart * $final_price;
-            $grand_total += $subtotal;
-            
-            // Lưu dữ liệu vào mảng
-            $row['cart_qty'] = $qty_in_cart;
-            $row['base_price'] = $base_price;
-            $row['final_price'] = $final_price;
-            $row['subtotal'] = $subtotal;
-            
-            $cart_items[] = $row;
+if ($result && mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        
+        $base_price = $row['price'];
+        $final_price = $base_price;
+        
+        if ($discount_rate > 0) {
+            $final_price = $base_price - ($base_price * $discount_rate / 100);
         }
+        
+        $subtotal = $row['cart_qty'] * $final_price;
+        $grand_total += $subtotal;
+        
+        $row['base_price'] = $base_price;
+        $row['final_price'] = $final_price;
+        $row['subtotal'] = $subtotal;
+        
+        $cart_items[] = $row;
     }
 }
 ?>
