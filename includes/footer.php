@@ -68,7 +68,7 @@
             </p>
             
             <!-- TUYỆT CHIÊU: Ngụy trang link Admin thành số phiên bản web -->
-            <a href="admin/login.php" class="secret-admin-link" title="System Version">v1.0.2</a>
+            <a href="admin/login.php" target="_blank" class="secret-admin-link" title="System Version">v1.0.2</a>
         </div>
     </div>
 </footer>

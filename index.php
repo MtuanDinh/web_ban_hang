@@ -1,12 +1,16 @@
 <?php
 require_once("includes/connect_db.php");
 
-// 1. Lấy danh mục hiển thị bộ lọc
+// 1. Lấy danh mục hiển thị bộ lọc (Điện thoại)
 $sql_cats = "SELECT id, name FROM categories WHERE parent_id = 1 ORDER BY id ASC LIMIT 5";
 $result_cats = mysqli_query($conn, $sql_cats);
 
-$where_clause = "";
-if (isset($_GET['category_id']) && is_numeric($_GET['category_id'])) {
+// ==========================================
+// FIX LỖI "XÂM LẤN": Mặc định luôn giới hạn hiển thị trong nhóm Điện thoại (ID 1)
+// ==========================================
+$where_clause = "WHERE p.category_id = 1 OR p.category_id IN (SELECT id FROM categories WHERE parent_id = 1)";
+
+if (isset($_GET['category_id']) && is_numeric($_GET['category_id']) && $_GET['category_id'] != 0) {
     $cat_id = (int)$_GET['category_id'];
     $where_clause = "WHERE p.category_id = $cat_id 
                      OR p.category_id IN (SELECT id FROM categories WHERE parent_id = $cat_id)";
@@ -22,22 +26,24 @@ ORDER BY p.id DESC
 LIMIT 8";
 $result = mysqli_query($conn, $sql);
 
-// ==========================================
 // THÊM MỚI 1: Lấy 4 sản phẩm ngẫu nhiên cho FLASH SALE
-// ==========================================
 $sql_flash = "SELECT p.id, p.name, p.image, MIN(pv.price) as min_price 
               FROM products p LEFT JOIN product_variants pv ON p.id = pv.product_id 
               GROUP BY p.id ORDER BY RAND() LIMIT 4";
 $res_flash = mysqli_query($conn, $sql_flash);
 
-// ==========================================
 // THÊM MỚI 2: Lấy 5 sản phẩm Phụ kiện mới nhất
-// ==========================================
 $sql_acc_prods = "SELECT p.id, p.name, p.image, MIN(pv.price) as min_price 
                   FROM products p LEFT JOIN product_variants pv ON p.id = pv.product_id 
                   WHERE p.category_id = 2 OR p.category_id IN (SELECT id FROM categories WHERE parent_id = 2)
                   GROUP BY p.id ORDER BY p.id DESC LIMIT 5";
 $res_acc_prods = mysqli_query($conn, $sql_acc_prods);
+
+// ==========================================
+// THÊM MỚI 3: Lấy 6 danh mục Phụ kiện động từ DB để làm Nút bấm
+// ==========================================
+$sql_acc_cats = "SELECT id, name FROM categories WHERE parent_id = 2 ORDER BY id ASC LIMIT 6";
+$res_acc_cats = mysqli_query($conn, $sql_acc_cats);
 ?>
 
 <!DOCTYPE html>
@@ -92,10 +98,10 @@ $res_acc_prods = mysqli_query($conn, $sql_acc_prods);
                     while ($f_row = mysqli_fetch_assoc($res_flash)):
                         $f_price = $f_row['min_price'] ? $f_row['min_price'] : 0;
                         $f_img = !empty($f_row['image']) ? 'assets/uploads/' . $f_row['image'] : 'https://via.placeholder.com/300';
-                        $fake_discount = rand(15, 40); // Random số giảm giá to to cho sốc
+                        $fake_discount = rand(15, 40);
                         $f_old = $f_price / (1 - ($fake_discount/100));
                 ?>
-                <a href="detail.php?id=<?= $f_row['id'] ?>" class="flash-card" style="position: relative;">
+                <a href="detail.php?id=<?= $f_row['id'] ?>" class="flash-card" style="position: relative; text-decoration: none;">
                     <div class="flash-badge">GIẢM <?= $fake_discount ?>%</div>
                     <div class="product-image"><img src="<?= htmlspecialchars($f_img) ?>" alt="<?= htmlspecialchars($f_row['name']) ?>"></div>
                     <h3 class="product-name" style="font-size: 13px;"><?= htmlspecialchars($f_row['name']) ?></h3>
@@ -161,19 +167,36 @@ $res_acc_prods = mysqli_query($conn, $sql_acc_prods);
             </div>
             
             <div class="acc-icon-list">
-                <div class="accessory-item"><img src="https://cdn-icons-png.flaticon.com/512/94/94225.png"><span>Phụ kiện Apple</span></div>
-                <div class="accessory-item"><img src="https://cdn-icons-png.flaticon.com/512/16954/16954223.png"><span>Cáp, sạc</span></div>
-                <div class="accessory-item"><img src="https://cdn-icons-png.flaticon.com/512/1670/1670683.png"><span>Sạc dự phòng</span></div>
-                <div class="accessory-item"><img src="https://cdn-icons-png.flaticon.com/512/5780/5780358.png"><span>Ốp lưng</span></div>
-                <div class="accessory-item"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEtGyKsvgqvIVaX2H7XhJmkwgnnDUkKUMqHA&s"><span>Tai nghe</span></div>
-                <div class="accessory-item"><img src="https://static.thenounproject.com/png/5000323-200.png"><span>Tản nhiệt</span></div>
+                <?php
+                // Mảng chứa các URL icon tương ứng
+                $acc_icons = [
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEtGyKsvgqvIVaX2H7XhJmkwgnnDUkKUMqHA&s', // Tai nghe
+                    'https://cdn-icons-png.flaticon.com/512/16954/16954223.png',     // Củ sạc
+                    'https://cdn-icons-png.flaticon.com/512/1670/1670683.png', // Pin dự phòng
+                    'https://cdn-icons-png.flaticon.com/512/394/394252.png',// Cáp sạc
+                    'https://cdn-icons-png.flaticon.com/512/5780/5780358.png', // Ốp lưng
+                    'https://static.thenounproject.com/png/5000323-200.png'    // Tản nhiệt
+                ];
+                
+                $i = 0;
+                if ($res_acc_cats && mysqli_num_rows($res_acc_cats) > 0) {
+                    while ($cat = mysqli_fetch_assoc($res_acc_cats)) {
+                        $icon_url = isset($acc_icons[$i]) ? $acc_icons[$i] : $acc_icons[0];
+                        // TUYỆT CHIÊU: Bọc vào thẻ <a> và truyền type ID động vào URL
+                        echo '<a href="category_accessory.php?type=' . $cat['id'] . '" class="accessory-item" style="text-decoration: none; color: inherit;">';
+                        echo '<img src="' . $icon_url . '" alt="' . htmlspecialchars($cat['name']) . '">';
+                        echo '<span>' . htmlspecialchars($cat['name']) . '</span>';
+                        echo '</a>';
+                        $i++;
+                    }
+                }
+                ?>
             </div>
 
             <div class="accessory-grid-products">
                 <?php
                 if ($res_acc_prods && mysqli_num_rows($res_acc_prods) > 0) {
                     while ($row = mysqli_fetch_assoc($res_acc_prods)) {
-                        // Tái sử dụng file product_card.php để hiển thị luôn
                         include("includes/product_card.php");
                     }
                 } else {

@@ -92,14 +92,34 @@ $result = mysqli_query($conn, $sql);
 <body>
     <?php include "includes/header.php"; include "includes/nav.php"; ?>
 
-    <main class="main-content category-container">
-        <h2 class="page-title">📱 Điện Thoại & Tablet</h2>
 
-        <div class="filter-section">
+    <main class="main-content category-container">
+        
+        <div class="breadcrumb">
+            <a href="index.php"><i class="fa-solid fa-house-chimney"></i> Trang chủ</a> 
+            <span style="color: #ccc; margin: 0 8px;">/</span> 
+            <span style="color: #555; font-weight: 600;">Điện thoại & Tablet</span>
+        </div>
+
+        <div class="category-promo-banners">
+            <div class="promo-main">
+                <img src="assets/image/samsung-galaxy-slide.webp" alt="Samsung Promo" class="promo-img">
+            </div>
+            <div class="promo-sub">
+                <img src="assets/image/iphonebannersmall.jpg" alt="iPhone Promo" class="promo-img">
+                <img src="assets/image/anhbannerxiaomismall.jpg" alt="Xiaomi Promo" class="promo-img">
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #d70018; padding-bottom: 10px; margin-bottom: 20px;">
+            <h2 class="page-title" style="margin: 0; font-size: 24px; text-transform: uppercase; color: #333; font-weight: 800;">📱 Điện Thoại Chính Hãng</h2>
+        </div>
+
+        <div class="filter-box-wrapper">
             <form action="category_phone.php" method="GET" id="filterForm">
                 
                 <div class="filter-row">
-                    <div class="filter-label">Hãng sản xuất:</div>
+                    <div class="filter-label"><i class="fa-solid fa-filter"></i> Hãng sản xuất:</div>
                     <div class="filter-options">
                         <label>
                             <input type="radio" name="brand" value="0" onchange="document.getElementById('filterForm').submit();" <?= ($brand_filter == 0) ? 'checked' : '' ?>>
@@ -115,11 +135,11 @@ $result = mysqli_query($conn, $sql);
                 </div>
 
                 <div class="filter-row">
-                    <div class="filter-label">Mức giá:</div>
+                    <div class="filter-label"><i class="fa-solid fa-money-bill-wave"></i> Mức giá:</div>
                     <div class="filter-options">
                         <label>
                             <input type="radio" name="price" value="" onchange="document.getElementById('filterForm').submit();" <?= ($price_filter == '') ? 'checked' : '' ?>>
-                            <span class="btn-filter">Tất cả</span>
+                            <span class="btn-filter">Tất cả khoảng giá</span>
                         </label>
                         <label>
                             <input type="radio" name="price" value="duoi-5" onchange="document.getElementById('filterForm').submit();" <?= ($price_filter == 'duoi-5') ? 'checked' : '' ?>>
@@ -140,12 +160,12 @@ $result = mysqli_query($conn, $sql);
                     </div>
                 </div>
 
-                <div class="filter-row">
-                    <div class="filter-label">Sắp xếp theo:</div>
+                <div class="filter-row" style="margin-bottom: 0; padding-bottom: 0; border-bottom: none;">
+                    <div class="filter-label"><i class="fa-solid fa-arrow-down-a-z"></i> Sắp xếp theo:</div>
                     <div class="filter-options">
                         <label>
                             <input type="radio" name="sort" value="" onchange="document.getElementById('filterForm').submit();" <?= ($sort == '') ? 'checked' : '' ?>>
-                            <span class="btn-filter">Nổi bật</span>
+                            <span class="btn-filter">Nổi bật nhất</span>
                         </label>
                         <label>
                             <input type="radio" name="sort" value="asc" onchange="document.getElementById('filterForm').submit();" <?= ($sort == 'asc') ? 'checked' : '' ?>>

@@ -60,7 +60,7 @@ body {
 }
 
 nav {
-  background: linear-gradient(to top, rgb(223, 60, 71), rgb(233, 95, 105));
+  background: linear-gradient(to top, red, rgb(245, 141, 159));
   margin: 0;
 }
 

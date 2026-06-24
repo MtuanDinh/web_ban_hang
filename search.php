@@ -1,4 +1,5 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once("includes/connect_db.php");
 
 $keyword = "";
@@ -9,8 +10,6 @@ $total_pages = 0;
 
 // THIẾT LẬP SỐ LƯỢNG SẢN PHẨM TRÊN 1 TRANG
 $limit = 24; 
-
-// Lấy trang hiện tại (Mặc định là trang 1 nếu không có tham số)
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($page <= 0) $page = 1;
 $offset = ($page - 1) * $limit;
@@ -27,8 +26,7 @@ if (isset($_GET['keyword']) && trim($_GET['keyword']) != "") {
         elseif ($sort == 'desc') $order_by = "ORDER BY min_price DESC";
     }
     
-    // 2. ĐẾM TỔNG SỐ SẢN PHẨM (Để chia số trang)
-    // Dùng COUNT(DISTINCT p.id) để tránh đếm trùng nếu 1 sản phẩm có nhiều phiên bản
+    // 2. ĐẾM TỔNG SỐ SẢN PHẨM
     $sql_count = "SELECT COUNT(DISTINCT p.id) as total 
                   FROM products p 
                   LEFT JOIN product_variants pv ON p.id = pv.product_id 
@@ -36,11 +34,9 @@ if (isset($_GET['keyword']) && trim($_GET['keyword']) != "") {
     $res_count = mysqli_query($conn, $sql_count);
     $row_count = mysqli_fetch_assoc($res_count);
     $total_records = $row_count['total'];
-    
-    // Tính tổng số trang (Dùng hàm ceil để làm tròn lên)
     $total_pages = ceil($total_records / $limit);
 
-    // 3. TRUY VẤN DỮ LIỆU CÓ GIỚI HẠN (LIMIT & OFFSET)
+    // 3. TRUY VẤN DỮ LIỆU TÌM KIẾM
     $sql = "SELECT p.*, MIN(pv.price) as min_price 
             FROM products p 
             LEFT JOIN product_variants pv ON p.id = pv.product_id 
@@ -48,8 +44,18 @@ if (isset($_GET['keyword']) && trim($_GET['keyword']) != "") {
             GROUP BY p.id 
             $order_by 
             LIMIT $limit OFFSET $offset";
-            
     $result = mysqli_query($conn, $sql);
+
+    // ========================================================
+    // TUYỆT CHIÊU: NẾU TÌM KHÔNG RA, LẤY 4 SẢN PHẨM NGẪU NHIÊN
+    // ========================================================
+    if ($total_records == 0) {
+        $sql_suggest = "SELECT p.*, MIN(pv.price) as min_price 
+                        FROM products p LEFT JOIN product_variants pv ON p.id = pv.product_id 
+                        GROUP BY p.id ORDER BY RAND() LIMIT 4";
+        $res_suggest = mysqli_query($conn, $sql_suggest);
+    }
+
 } else {
     header("Location: index.php");
     exit();
@@ -64,51 +70,53 @@ if (isset($_GET['keyword']) && trim($_GET['keyword']) != "") {
     <title>Tìm kiếm: <?= htmlspecialchars($keyword) ?> - PhoneStore</title>
     <script src="https://kit.fontawesome.com/da1a483940.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="assets/css/style_client.css">
-    <style>
-        .search-header { max-width: 1200px; margin: 30px auto 20px auto; padding: 0 15px; }
-        .search-title { font-size: 22px; color: #333; margin-bottom: 10px;}
-        .search-keyword { color: #d70018; font-style: italic; }
-        .filter-bar { display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 15px 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #eee;}
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto 50px auto; padding: 0 15px; }
-        .empty-search { text-align: center; padding: 80px 20px; background: #fff; border-radius: 8px; max-width: 1200px; margin: 0 auto; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .empty-search i { font-size: 60px; color: #ccc; margin-bottom: 20px; }
-        
-        /* CSS CHO THANH PHÂN TRANG */
-        .pagination { display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 60px; }
-        .page-link { display: flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 6px; background: #fff; border: 1px solid #ddd; color: #333; text-decoration: none; font-weight: 600; transition: 0.3s; }
-        .page-link:hover { border-color: #d70018; color: #d70018; }
-        .page-link.active { background: #d70018; color: #fff; border-color: #d70018; pointer-events: none; }
-    </style>
+    <link rel="stylesheet" href="assets/css/style_search.css">
 </head>
 <body>
     <?php include "includes/header.php"; include "includes/nav.php"; ?>
 
-    <main class="main-content">
-        <div class="search-header">
-            <h2 class="search-title">Kết quả tìm kiếm cho: <span class="search-keyword">"<?= htmlspecialchars($keyword) ?>"</span></h2>
+    <main class="main-content search-container">
+        
+        <div class="breadcrumb">
+            <a href="index.php"><i class="fa-solid fa-house-chimney"></i> Trang chủ</a> 
+            <span style="color: #ccc; margin: 0 8px;">/</span> 
+            <span style="color: #555; font-weight: 600;">Tìm kiếm: "<?= htmlspecialchars($keyword) ?>"</span>
+        </div>
+
+        <img src="assets/image/samsung-galaxy-slide.webp" alt="Khuyến mãi" class="search-banner">
+
+        <div>
+            <h2 class="search-title"><i class="fa-solid fa-magnifying-glass" style="color: #ccc;"></i> Kết quả tìm kiếm cho: <span class="search-keyword">"<?= htmlspecialchars($keyword) ?>"</span></h2>
             
-            <?php if ($total_records > 0): ?>
-                <div class="filter-bar">
-                    <p style='color: #555; margin: 0;'>Tìm thấy <b><?= $total_records ?></b> sản phẩm phù hợp.</p>
-                    
-                    <form action="search.php" method="GET" style="display: flex; align-items: center; gap: 10px;">
-                        <input type="hidden" name="keyword" value="<?= htmlspecialchars($keyword) ?>">
-                        
-                        <label for="sort" style="font-weight: 600; color: #444; font-size: 14px;">Sắp xếp theo:</label>
-                        <select name="sort" id="sort" onchange="this.form.submit()" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; outline: none; cursor: pointer; font-size: 14px;">
-                            <option value="">-- Mặc định --</option>
-                            <option value="asc" <?= ($sort == 'asc') ? 'selected' : '' ?>>Giá: Thấp đến Cao</option>
-                            <option value="desc" <?= ($sort == 'desc') ? 'selected' : '' ?>>Giá: Cao xuống Thấp</option>
-                        </select>
-                    </form>
-                </div>
-            <?php endif; ?>
+            <div class="trending-box">
+                <span style="color: #888; font-weight: 600;"><i class="fa-solid fa-fire" style="color: #ff9800;"></i> Tìm kiếm phổ biến:</span>
+                <a href="search.php?keyword=iPhone+16" class="trending-tag">iPhone 16</a>
+                <a href="search.php?keyword=Samsung" class="trending-tag">Samsung Galaxy</a>
+                <a href="search.php?keyword=Oppo" class="trending-tag">Oppo Reno</a>
+                <a href="search.php?keyword=Sạc" class="trending-tag">Cáp sạc</a>
+            </div>
         </div>
 
         <?php if ($total_records > 0): ?>
+            
+            <div class="filter-bar">
+                <div style='color: #555; font-size: 15px;'>
+                    <i class="fa-solid fa-check-double" style="color: #10b981;"></i> Tìm thấy <b><?= $total_records ?></b> sản phẩm phù hợp.
+                </div>
+                
+                <form action="search.php" method="GET" style="display: flex; align-items: center; gap: 10px;">
+                    <input type="hidden" name="keyword" value="<?= htmlspecialchars($keyword) ?>">
+                    <label for="sort" style="font-weight: 600; color: #444; font-size: 14px;"><i class="fa-solid fa-arrow-down-a-z"></i> Sắp xếp:</label>
+                    <select name="sort" id="sort" onchange="this.form.submit()" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; outline: none; cursor: pointer; font-size: 14px; background: #f8f9fa;">
+                        <option value="">-- Mặc định --</option>
+                        <option value="asc" <?= ($sort == 'asc') ? 'selected' : '' ?>>Giá: Thấp đến Cao</option>
+                        <option value="desc" <?= ($sort == 'desc') ? 'selected' : '' ?>>Giá: Cao xuống Thấp</option>
+                    </select>
+                </form>
+            </div>
+
             <div class="product-grid">
-                <?php while ($row = mysqli_fetch_assoc($result)): 
-                ?>
+                <?php while ($row = mysqli_fetch_assoc($result)): ?>
                     <?php include("includes/product_card.php") ?>
                 <?php endwhile; ?>
             </div>
@@ -125,12 +133,25 @@ if (isset($_GET['keyword']) && trim($_GET['keyword']) != "") {
             <?php endif; ?>
 
         <?php else: ?>
+            
             <div class="empty-search">
                 <i class="fa-solid fa-face-frown-open"></i>
                 <h3 style="color: #555;">Rất tiếc, chúng tôi không tìm thấy sản phẩm nào!</h3>
-                <p style="color: #777; margin-bottom: 20px;">Vui lòng thử lại với từ khóa khác (Ví dụ: iPhone, Samsung, Sạc...)</p>
-                <a href="index.php" class="btn-checkout" style="padding: 12px 30px; background: #d70018; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Quay về Trang Chủ</a>
+                <p style="color: #777; margin-bottom: 20px;">Vui lòng kiểm tra lại lỗi chính tả hoặc thử các từ khóa phổ biến ở trên.</p>
+                <a href="index.php" style="padding: 12px 30px; background: #d70018; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; box-shadow: 0 4px 10px rgba(215,0,24,0.2);">Quay về Trang Chủ</a>
             </div>
+
+            <?php if (isset($res_suggest) && mysqli_num_rows($res_suggest) > 0): ?>
+                <div style="margin-top: 40px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                    <h3 style="font-size: 20px; color: #333; margin: 0; text-transform: uppercase;">✨ Gợi ý cho bạn</h3>
+                </div>
+                <div class="product-grid" style="margin-bottom: 40px;">
+                    <?php while ($row = mysqli_fetch_assoc($res_suggest)): ?>
+                        <?php include("includes/product_card.php") ?>
+                    <?php endwhile; ?>
+                </div>
+            <?php endif; ?>
+
         <?php endif; ?>
     </main>
 

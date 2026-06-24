@@ -128,3 +128,88 @@
     border-radius: 8px;
     border: 1px dashed #ccc;
 }
+
+
+.category-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 15px;
+}
+
+.breadcrumb {
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.breadcrumb a {
+    color: #2f80ed;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.breadcrumb a:hover {
+    color: #d70018;
+}
+
+/* Layout Banner Khuyến Mãi */
+.category-promo-banners {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.promo-img {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.promo-img:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.promo-main img {
+    height: 250px;
+}
+
+.promo-sub {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.promo-sub img {
+    height: calc(125px - 7.5px);
+}
+
+/* Hộp Bộ Lọc */
+.filter-box-wrapper {
+    background: #fff;
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.03);
+    border: 1px solid #f0f0f0;
+    margin-bottom: 30px;
+}
+
+@media screen and (max-width: 768px) {
+    .category-promo-banners {
+        grid-template-columns: 1fr;
+    }
+
+    .promo-main img,
+    .promo-sub img {
+        height: auto;
+        aspect-ratio: 21/9;
+    }
+
+    .promo-sub {
+        display: none;
+        /* Ẩn bớt banner nhỏ trên mobile cho gọn */
+    }
+}
