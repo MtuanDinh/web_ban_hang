@@ -170,9 +170,9 @@ if ($res_reviews) {
                         <select name="variant_id" id="variant_select" class="variant-select" onchange="updatePrice()" required>
                             <?php if (!empty($variants)): ?>
                                 <?php foreach ($variants as $index => $v): ?>
-                                    <option value="<?= $v['id'] ?>" data-price="<?= $v['price'] ?>">
+                                    <option value="<?= $v['id'] ?>" data-price="<?= $v['price'] ?>" <?= $v['stock'] <= 0 ? 'disabled' : '' ?>>
                                         <?= htmlspecialchars($v['color']) ?> - <?= htmlspecialchars($v['version']) ?> 
-                                        (Kho: <?= $v['stock'] ?>)
+                                        <?= $v['stock'] > 0 ? '(Kho: ' . $v['stock'] . ')' : '- TẠM HẾT HÀNG' ?>
                                     </option>
                                 <?php endforeach; ?>
                             <?php else: ?>

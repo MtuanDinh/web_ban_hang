@@ -53,36 +53,51 @@ if (isset($_POST['btn_place_order'])) {
     if(empty($customer_name) || empty($customer_phone) || empty($shipping_address)) {
         $error = "Vui lòng điền đầy đủ thông tin giao hàng!";
     } else {
-        $sql_order = "INSERT INTO orders (user_id, shipping_address, customer_phone, customer_name, total, status) 
-                      VALUES ($user_id, '$shipping_address', '$customer_phone', '$customer_name', $grand_total, 0)";
-        
-        if (mysqli_query($conn, $sql_order)) {
-            $new_order_id = mysqli_insert_id($conn);
-
-            foreach ($cart_items as $item) {
-                $p_id = $item['product_id']; 
-                $qty = $item['cart_qty'];
-                $price_to_save = $item['final_price'];     
-                $variant_string = mysqli_real_escape_string($conn, $item['color'] . ' - ' . $item['version']);
-                
-                $sql_detail = "INSERT INTO order_details (order_id, product_id, variant_name, quantity, unit_price) 
-                               VALUES ($new_order_id, $p_id, '$variant_string', $qty, $price_to_save)";
-                mysqli_query($conn, $sql_detail);
-                
-                $v_id = $item['variant_id'];
-                $new_stock = $item['stock'] - $qty;
-                if ($new_stock < 0) $new_stock = 0;
-                mysqli_query($conn, "UPDATE product_variants SET stock = $new_stock WHERE id = $v_id");
+        // --- BỔ SUNG: KIỂM TRA KHO TRƯỚC KHI TẠO ĐƠN ---
+        $stock_error = false;
+        foreach ($cart_items as $item) {
+            // Nếu khách hàng mua nhiều hơn số lượng kho hiện có
+            if ($item['stock'] < $item['cart_qty']) {
+                $stock_error = true;
+                $error = "Rất tiếc! Sản phẩm <b>" . $item['name'] . " (" . $item['color'] . ")</b> hiện chỉ còn " . $item['stock'] . " chiếc trong kho. Vui lòng quay lại Giỏ hàng để điều chỉnh.";
+                break;
             }
+        }
+        // ------------------------------------------------
+        
+        // Chỉ khi không có lỗi kho hàng thì mới tiến hành tạo đơn
+        if (!$stock_error) {
+            $sql_order = "INSERT INTO orders (user_id, shipping_address, customer_phone, customer_name, total, status) 
+                          VALUES ($user_id, '$shipping_address', '$customer_phone', '$customer_name', $grand_total, 0)";
+            
+            if (mysqli_query($conn, $sql_order)) {
+                $new_order_id = mysqli_insert_id($conn);
 
-            // XÓA SẠCH GIỎ HÀNG TRONG DATABASE SAU KHI MUA THÀNH CÔNG
-            mysqli_query($conn, "DELETE FROM cart WHERE user_id = $user_id");
-            
-            $show_modal = true;
-            $success_message = "Đơn hàng <b>#$new_order_id</b> của bạn đã được ghi nhận. Cảm ơn bạn đã mua sắm!";
-            
-        } else {
-            $error = "Hệ thống đang bận, vui lòng thử lại sau!";
+                foreach ($cart_items as $item) {
+                    $p_id = $item['product_id']; 
+                    $qty = $item['cart_qty'];
+                    $price_to_save = $item['final_price'];     
+                    $variant_string = mysqli_real_escape_string($conn, $item['color'] . ' - ' . $item['version']);
+                    
+                    $sql_detail = "INSERT INTO order_details (order_id, product_id, variant_name, quantity, unit_price) 
+                                   VALUES ($new_order_id, $p_id, '$variant_string', $qty, $price_to_save)";
+                    mysqli_query($conn, $sql_detail);
+                    
+                    $v_id = $item['variant_id'];
+                    $new_stock = $item['stock'] - $qty;
+                    if ($new_stock < 0) $new_stock = 0;
+                    mysqli_query($conn, "UPDATE product_variants SET stock = $new_stock WHERE id = $v_id");
+                }
+
+                // XÓA SẠCH GIỎ HÀNG TRONG DATABASE SAU KHI MUA THÀNH CÔNG
+                mysqli_query($conn, "DELETE FROM cart WHERE user_id = $user_id");
+                
+                $show_modal = true;
+                $success_message = "Đơn hàng <b>#$new_order_id</b> của bạn đã được ghi nhận. Cảm ơn bạn đã mua sắm!";
+                
+            } else {
+                $error = "Hệ thống đang bận, vui lòng thử lại sau!";
+            }
         }
     }
 }

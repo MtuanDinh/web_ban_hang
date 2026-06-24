@@ -1,5 +1,10 @@
+/* ==========================================================
+   GIAO DIỆN TRANG TÌM KIẾM (SEARCH PAGE)
+   ========================================================== */
+
+/* 1. Khung layout đồng bộ với biến toàn cục ở style_client.css */
 .search-container {
-    max-width: 1200px;
+    max-width: var(--container-width, 1200px);
     margin: 0 auto;
     padding: 20px 15px;
 }
@@ -16,21 +21,23 @@
 }
 
 .breadcrumb a:hover {
-    color: #d70018;
+    color: var(--primary, #d70018);
 }
 
+/* 2. Banner trang tìm kiếm */
 .search-banner {
     width: 100%;
     height: 250px;
     object-fit: cover;
     border-radius: 12px;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
+/* 3. Tiêu đề kết quả */
 .search-title {
     font-size: 24px;
-    color: #333;
+    color: var(--text-main, #333);
     margin: 0 0 15px 0;
     font-weight: 800;
     display: flex;
@@ -39,38 +46,46 @@
 }
 
 .search-keyword {
-    color: #d70018;
+    color: var(--primary, #d70018);
     font-style: italic;
 }
 
-/* Giao diện Từ khóa thịnh hành */
+/* 4. Khung Từ khóa phổ biến (Trending) */
 .trending-box {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 25px;
-    font-size: 14px;
     flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 30px;
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color, #eee);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
 }
 
+/* Nút từ khóa dạng Pill Buttons */
 .trending-tag {
-    background: #f1f5f9;
-    color: #475569;
-    padding: 6px 15px;
-    border-radius: 20px;
+    padding: 6px 16px;
+    background: #f8f9fa;
+    color: #555;
     text-decoration: none;
-    transition: 0.2s;
-    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    font-size: 13px;
     font-weight: 500;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .trending-tag:hover {
-    background: #ffe8ea;
-    color: #d70018;
-    border-color: #f5c2c7;
+    background-color: #fffafb;
+    color: var(--primary, #d70018);
+    border-color: var(--primary, #d70018);
     transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(215, 0, 24, 0.1);
 }
 
+/* 5. Thanh công cụ lọc & đếm kết quả */
 .filter-bar {
     display: flex;
     justify-content: space-between;
@@ -83,60 +98,62 @@
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.03);
 }
 
+/* Lưới sản phẩm - Ép cứng 4 sản phẩm / hàng trên PC */
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 cột, mỗi cột chiếm 1 phần (1 Fraction) */
     gap: 15px;
     margin-bottom: 50px;
 }
 
+/* --- THIẾT KẾ ĐÁP ỨNG (RESPONSIVE) --- */
+/* Màn hình Tablet (Dưới 1024px) -> Rút xuống 3 sản phẩm / hàng */
+@media screen and (max-width: 1024px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Màn hình Điện thoại (Dưới 768px) -> Rút xuống 2 sản phẩm / hàng */
+@media screen and (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        /* Thu hẹp khoảng cách các thẻ trên mobile */
+    }
+}
+
+/* 6. Giao diện khi KHÔNG tìm thấy sản phẩm */
 .empty-search {
     text-align: center;
-    padding: 50px 20px;
+    padding: 60px 20px;
     background: #fff;
     border-radius: 12px;
     border: 1px dashed #ccc;
-    margin-bottom: 30px;
+    margin: 20px 0 40px 0;
 }
 
 .empty-search i {
     font-size: 60px;
     color: #cbd5e1;
     margin-bottom: 20px;
+    animation: float 2s ease-in-out infinite;
+    /* Hiệu ứng icon lơ lửng */
 }
 
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 60px;
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
 }
 
-.page-link {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    background: #fff;
-    border: 1px solid #ddd;
-    color: #333;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.3s;
-}
-
-.page-link:hover {
-    border-color: #d70018;
-    color: #d70018;
-    box-shadow: 0 2px 8px rgba(215, 0, 24, 0.1);
-}
-
-.page-link.active {
-    background: #d70018;
-    color: #fff;
-    border-color: #d70018;
-    pointer-events: none;
-}
+/* 7.

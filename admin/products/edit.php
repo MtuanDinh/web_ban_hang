@@ -33,6 +33,7 @@ $categories = selectDb($conn, 'categories', '*', [], 'ORDER BY id ASC');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/da1a483940.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/web_ban_hang/admin/assets/css/style_main.css">
     <title>Sửa Sản Phẩm</title>
 </head>
@@ -43,32 +44,33 @@ $categories = selectDb($conn, 'categories', '*', [], 'ORDER BY id ASC');
         <?php include("../includes/sidebar.php") ?>
         
         <div id="content">
-            <div id="product_head" style="margin-bottom: 20px;">
-                <a href="list.php" style="text-decoration: none; color: var(--text-muted); font-size: 14px;">⬅ Quay lại danh sách Sản phẩm</a>
-                <h3 style="margin-top: 10px;">Sửa Sản Phẩm: <span style="color: var(--primary-color);"><?php echo $p['name']; ?></span></h3>
+            <div class="page-header">
+                <a href="list.php" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Quay lại danh sách</a>
+                <h3 class="page-title" style="margin-top: 15px;">Sửa Sản Phẩm: <span style="color: var(--primary-color);"><?php echo htmlspecialchars($p['name']); ?></span></h3>
             </div>
 
-            <div style="background: var(--bg-admin, #fff); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color, #444); margin-bottom: 20px;">
+            <div class="admin-form-container">
                 <form action="edit_work.php" method="post" enctype="multipart/form-data">
                     
                     <input type="hidden" name="edit_id" value="<?php echo $p['id']; ?>">
                     
-                    <h3 style="font-size: 16px; border-bottom: 2px solid var(--border-color); padding-bottom: 5px; margin-bottom: 15px;">Thông tin cơ bản</h3>
+                    <h3 style="font-size: 16px; border-bottom: 2px solid var(--border-admin); color: var(--primary-color); padding-bottom: 10px; margin-bottom: 20px;">
+                        <i class="fa-solid fa-circle-info"></i> Thông tin cơ bản
+                    </h3>
                     
-                    <div style="display: flex; gap: 15px;">
-                        <div style="flex: 1;">
+                    <div class="form-row">
+                        <div class="form-group">
                             <label for="prod_name">Tên sản phẩm *</label>
-                            <input type="text" name="prod_name" required id="prod_name" value="<?php echo $p['name']; ?>" class="form_input" style="width: 100%;">
+                            <input type="text" name="prod_name" required id="prod_name" value="<?php echo htmlspecialchars($p['name']); ?>" class="form-control">
                         </div>
                         
-                        <div style="flex: 1;">
+                        <div class="form-group">
                             <label for="category_id">Danh mục / Nhãn hiệu *</label>
-                            <select name="category_id" id="category_id" required class="form_input" style="width: 100%; height: 40px;">
+                            <select name="category_id" id="category_id" required class="form-control">
                                 <?php
                                 if (!empty($categories)) {
                                     foreach ($categories as $cat) {
                                         $prefix = ($cat['parent_id'] != null) ? " --- " : "";
-                                        // Kiểm tra xem ID danh mục nào khớp với sản phẩm thì thêm chữ 'selected'
                                         $selected = ($cat['id'] == $p['category_id']) ? "selected" : "";
                                         echo "<option value='{$cat['id']}' {$selected}>{$prefix}{$cat['name']}</option>";
                                     }
@@ -78,60 +80,62 @@ $categories = selectDb($conn, 'categories', '*', [], 'ORDER BY id ASC');
                         </div>
                     </div>
 
-                    <div style="display: flex; gap: 15px; margin-top: 15px; margin-bottom: 25px;">
-                        <div style="flex: 1;">
+                    <div class="form-row">
+                        <div class="form-group">
                             <label>Ảnh Bìa Hiện Tại</label>
-                            <div style="margin-bottom: 10px;">
+                            <div style="margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; border: 1px dashed var(--border-admin); display: inline-block;">
                                 <?php if($p['image']): ?>
-                                    <img src="/web_ban_hang/assets/uploads/<?php echo $p['image']; ?>" style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px; border: 1px solid var(--border-color);">
+                                    <img src="/web_ban_hang/assets/uploads/<?php echo htmlspecialchars($p['image']); ?>" style="width: 80px; height: 80px; object-fit: contain; background: #fff; padding: 5px; border-radius: 5px;">
                                 <?php else: ?>
-                                    <span style="color: red;">Chưa có ảnh</span>
+                                    <span style="color: var(--accent-error);"><i class="fa-solid fa-image"></i> Chưa có ảnh</span>
                                 <?php endif; ?>
                             </div>
                             <label for="prod_img">Chọn ảnh mới (Bỏ trống nếu muốn giữ ảnh cũ)</label>
-                            <input type="file" name="prod_img" id="prod_img" accept="image/png, image/jpeg, image/jpg" class="form_input" style="padding: 8px; width: 100%;">
+                            <input type="file" name="prod_img" id="prod_img" accept="image/png, image/jpeg, image/jpg" class="form-control" style="padding: 9px 15px;">
                         </div>
                         
-                        <div style="flex: 1;">
+                        <div class="form-group">
                             <label>Bộ ảnh chi tiết (Bỏ trống để giữ bộ ảnh cũ)</label>
-                            <input type="file" name="gallery[]" id="gallery" multiple accept="image/png, image/jpeg, image/jpg" class="form_input" style="padding: 8px; width: 100%;">
-                            <small style="color: var(--text-muted); display: block; margin-top: 5px;">* Nếu bạn tải ảnh mới lên đây, toàn bộ ảnh chi tiết cũ sẽ bị xóa và thay thế.</small>
+                            <input type="file" name="gallery[]" id="gallery" multiple accept="image/png, image/jpeg, image/jpg" class="form-control" style="padding: 9px 15px;">
+                            <small style="color: var(--accent-error); display: block; margin-top: 8px;"><i class="fa-solid fa-triangle-exclamation"></i> Nếu bạn tải ảnh mới lên, toàn bộ ảnh chi tiết cũ sẽ bị xóa.</small>
                         </div>
                     </div>
                     
-                    <div style="margin-bottom: 20px; padding: 15px; border: 1px dashed #ccc; border-radius: 8px;">
-                    <label style="font-weight: bold; margin-bottom: 10px; display: block;">⚙️ Chỉnh sửa Thông số kỹ thuật</label>
-                    
-                    <div id="dynamic_specs">
-                        <?php if (!empty($specs)): ?>
-                            <?php foreach ($specs as $key => $value): ?>
-                                <div class="spec-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
-                                    <input type="text" name="spec_keys[]" value="<?= htmlspecialchars($key) ?>" placeholder="Tên thông số..." class="form_input" style="flex: 1;">
-                                    <input type="text" name="spec_values[]" value="<?= htmlspecialchars($value) ?>" placeholder="Giá trị..." class="form_input" style="flex: 2;">
-                                    <button type="button" onclick="removeSpec(this)" style="background: var(--accent-error); color: white; border: none; padding: 0 15px; border-radius: 5px; cursor: pointer;">Xóa</button>
+                    <div style="margin-top: 20px; padding: 25px; border: 1px dashed var(--border-admin); border-radius: 12px; background: rgba(0,0,0,0.1);">
+                        <label style="font-size: 16px; color: var(--text-admin); margin-bottom: 15px; display: block;">
+                            <i class="fa-solid fa-microchip" style="color: #b388ff;"></i> Chỉnh sửa Thông số kỹ thuật
+                        </label>
+                        
+                        <div id="dynamic_specs">
+                            <?php if (!empty($specs)): ?>
+                                <?php foreach ($specs as $key => $value): ?>
+                                    <div class="spec-row" style="display: flex; gap: 15px; margin-bottom: 15px;">
+                                        <input type="text" name="spec_keys[]" value="<?= htmlspecialchars($key) ?>" placeholder="Tên thông số..." class="form-control" style="flex: 1;">
+                                        <input type="text" name="spec_values[]" value="<?= htmlspecialchars($value) ?>" placeholder="Giá trị..." class="form-control" style="flex: 2;">
+                                        <button type="button" onclick="removeSpec(this)" class="action-btn btn-delete" style="padding: 0 20px;"><i class="fa-solid fa-trash-can"></i> Xóa</button>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <div class="spec-row" style="display: flex; gap: 15px; margin-bottom: 15px;">
+                                    <input type="text" name="spec_keys[]" placeholder="Tên thông số (VD: CPU, Công suất...)" class="form-control" style="flex: 1;">
+                                    <input type="text" name="spec_values[]" placeholder="Giá trị (VD: Apple A17, 20W...)" class="form-control" style="flex: 2;">
+                                    <button type="button" onclick="removeSpec(this)" class="action-btn btn-delete" style="padding: 0 20px;"><i class="fa-solid fa-trash-can"></i> Xóa</button>
                                 </div>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <div class="spec-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
-                                <input type="text" name="spec_keys[]" placeholder="Tên thông số (VD: CPU, Công suất...)" class="form_input" style="flex: 1;">
-                                <input type="text" name="spec_values[]" placeholder="Giá trị (VD: Apple A17, 20W...)" class="form_input" style="flex: 2;">
-                                <button type="button" onclick="removeSpec(this)" style="background: var(--accent-error); color: white; border: none; padding: 0 15px; border-radius: 5px; cursor: pointer;">Xóa</button>
-                            </div>
-                        <?php endif; ?>
-                    </div>
+                            <?php endif; ?>
+                        </div>
 
-                    <button type="button" onclick="addSpec()" style="background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-top: 10px;">
-                        + Thêm thông số khác
-                    </button>
-                </div>
+                        <button type="button" onclick="addSpec()" class="action-btn" style="background: rgba(0, 230, 118, 0.1); color: var(--accent-success); border: 1px dashed var(--accent-success); padding: 10px 20px; margin-top: 10px;">
+                            <i class="fa-solid fa-plus"></i> Thêm thông số khác
+                        </button>
+                    </div>
 
                     <script>
                         function addSpec() {
                             var newRow = `
-                                <div class="spec-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
-                                    <input type="text" name="spec_keys[]" placeholder="Tên thông số..." class="form_input" style="flex: 1;">
-                                    <input type="text" name="spec_values[]" placeholder="Giá trị..." class="form_input" style="flex: 2;">
-                                    <button type="button" onclick="removeSpec(this)" style="background: var(--accent-error); color: white; border: none; padding: 0 15px; border-radius: 5px; cursor: pointer;">Xóa</button>
+                                <div class="spec-row" style="display: flex; gap: 15px; margin-bottom: 15px; animation: slideIn 0.3s ease;">
+                                    <input type="text" name="spec_keys[]" placeholder="Tên thông số..." class="form-control" style="flex: 1;">
+                                    <input type="text" name="spec_values[]" placeholder="Giá trị..." class="form-control" style="flex: 2;">
+                                    <button type="button" onclick="removeSpec(this)" class="action-btn btn-delete" style="padding: 0 20px;"><i class="fa-solid fa-trash-can"></i> Xóa</button>
                                 </div>
                             `;
                             document.getElementById('dynamic_specs').insertAdjacentHTML('beforeend', newRow);
@@ -142,7 +146,9 @@ $categories = selectDb($conn, 'categories', '*', [], 'ORDER BY id ASC');
                         }
                     </script>
                     
-                    <input type="submit" name="btn_edit" value="Lưu thay đổi" class="add_button" style="margin-top: 25px; width: 100%; height: 45px; font-size: 16px;">
+                    <button type="submit" name="btn_edit" class="btn-add-new" style="margin-top: 30px; width: 100%; justify-content: center; font-size: 16px; padding: 15px;">
+                        <i class="fa-solid fa-floppy-disk"></i> LƯU THAY ĐỔI
+                    </button>
                 </form>
             </div>
             

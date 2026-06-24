@@ -1,28 +1,31 @@
 :root {
     /* Màu nền và các khối */
-    --bg-admin: #121212;         /* Đen sẫm cho nền tổng thể */
-    --surface-admin: #1E1E1E;    /* Xám than cho form, bảng biểu, thẻ thống kê */
-    --sidebar-bg: #1A1A1A;       /* Màu riêng cho thanh menu dọc bên trái */
-    
-    /* Màu chữ */
-    --text-admin: #E0E0E0;       /* Trắng xám cho chữ chính (chống lóa mắt) */
-    --text-muted: #A0A0A0;       /* Xám trung tính cho ghi chú, placeholder */
-    
-    /* Màu chủ đạo & Nút bấm */
-    --primary-color: #00E5FF;    /* Xanh Cyan Neon rực rỡ cho các nút Lưu, Sửa */
-    --primary-hover: #00B8D4;    /* Xanh sậm hơn một chút khi hover */
-    
-    /* Màu nhấn (Cảnh báo/Lỗi) */
-    --accent-error: #FF4081;     /* Hồng đậm/Đỏ neon cho nút Xóa, báo lỗi form */
-    --accent-success: #00E676;   /* Xanh lá phản quang cho thông báo thành công */
-    
-    /* Đường viền */
-    --border-admin: #333333;     /* Viền xám tối phân tách các hàng trong bảng */
-}
+    --bg-admin: #0f111a;
+    /* Đen xanh thẳm cho nền màn hình */
+    --surface-admin: #1a1d2d;
+    /* Xám xanh cho khối Form */
 
-body {
-    background-color: var(--bg-admin);
-    color: var(--text-admin);
+    /* Màu chữ */
+    --text-admin: #e2e8f0;
+    /* Trắng xám cho chữ chính */
+    --text-muted: #94a3b8;
+    /* Xám trung tính cho ghi chú, placeholder */
+
+    /* Màu chủ đạo & Nút bấm */
+    --primary-color: #00E5FF;
+    /* Xanh Cyan Neon rực rỡ */
+    --primary-hover: #00B8D4;
+    /* Xanh sậm hơn khi hover */
+
+    /* Màu nhấn (Cảnh báo/Lỗi) */
+    --accent-error: #ff4d4f;
+    /* Đỏ cảnh báo */
+    --accent-success: #10b981;
+    /* Xanh lá thành công */
+
+    /* Đường viền */
+    --border-admin: #2e334a;
+    /* Viền xám tối phân tách */
 }
 
 * {
@@ -32,64 +35,169 @@ body {
     padding: 0;
 }
 
-h3{
-    text-align: center;
-    background-color: var(--sidebar-bg);
-    height: 50px;
-    padding: 10px;
-}
-
-#login_place {
-    padding: 40px;
-    margin: auto;
-    max-width: 450px;
-    border: 5px solid var(--border-admin);
-    border-radius: 10px;
+body {
+    background: radial-gradient(circle at top, #1a1d2d 0%, #0f111a 100%);
+    color: var(--text-admin);
+    height: 100vh;
     display: flex;
     justify-content: center;
-    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* KHỐI CARD ĐĂNG NHẬP */
+.login-wrapper {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+}
+
+.login-card {
     background-color: var(--surface-admin);
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-admin);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ĐIỂM NHẤN THANH PHÁT SÁNG TRÊN CÙNG CỦA CARD */
+.login-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), #8a2be2);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header h2 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.login-header p {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+/* FORM VÀ INPUT CÓ CHỨA ICON */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
     align-items: center;
 }
 
-form{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+.input-wrapper i {
+    position: absolute;
+    left: 15px;
+    color: var(--text-muted);
+    font-size: 16px;
+    transition: 0.3s;
 }
 
-label{
-    color: var(--text-admin);
-}
-
-input{
-    height: 30px;
-    margin: 10px 0;
+.input-wrapper input {
     width: 100%;
-    padding: 0 10px;
+    height: 48px;
+    padding: 0 15px 0 45px;
+    /* Dịch chữ sang phải nhường chỗ cho Icon */
+    background-color: rgba(0, 0, 0, 0.2);
     border: 1px solid var(--border-admin);
-    border-radius: 5px;
-    background-color: var(--bg-admin);
+    border-radius: 8px;
     color: var(--text-admin);
+    font-size: 15px;
+    transition: all 0.3s ease;
+    outline: none;
 }
 
-#login_btn{
-    width: 100px;
-    border-radius: 5px;
-    align-self: center;
+/* HIỆU ỨNG FOCUS (Bấm vào thẻ input) */
+.input-wrapper input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.15);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.input-wrapper input:focus+i {
+    color: var(--primary-color);
+    /* Icon cũng sáng lên màu Cyan */
+}
+
+/* NÚT ĐĂNG NHẬP */
+#login_btn {
+    width: 100%;
+    height: 48px;
     background-color: var(--primary-color);
-    color: var(--bg-admin);
-}
-
-#login_btn:hover{
-    background-color: var(--primary-hover);
+    color: #000;
+    /* Chữ đen trên nền Cyan rất nổi bật */
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
     cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    letter-spacing: 1px;
 }
 
-.error_message{
-    padding: 10px;
+#login_btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 229, 255, 0.3);
+}
+
+/* THÔNG BÁO LỖI */
+.error_message {
+    margin-top: 20px;
+    padding: 12px 15px;
+    background-color: rgba(255, 77, 79, 0.1);
+    border: 1px solid rgba(255, 77, 79, 0.3);
+    border-radius: 8px;
+    color: var(--accent-error);
+    font-size: 14px;
     text-align: center;
-    border: 1px solid var(--accent-error);
-    border-radius: 10px;
-    background-color: transparent;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
 }

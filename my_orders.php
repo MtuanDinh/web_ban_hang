@@ -1,4 +1,5 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once("includes/connect_db.php");
 
 // Bắt buộc phải đăng nhập mới xem được lịch sử mua hàng
@@ -8,6 +9,33 @@ if (!isset($_SESSION['user_client'])) {
 }
 
 $user_id = $_SESSION['user_client']['id'];
+
+// ==========================================
+// XỬ LÝ YÊU CẦU HỦY ĐƠN HÀNG
+// ==========================================
+if (isset($_GET['action']) && $_GET['action'] == 'cancel' && isset($_GET['id'])) {
+    $cancel_id = (int)$_GET['id'];
+    
+    // LỚP BẢO MẬT: Kiểm tra xem đơn hàng này có đúng là của User đang đăng nhập không, 
+    // và trạng thái có phải là 0 (Chờ duyệt) không. Tránh việc User truyền ID bậy bạ trên URL.
+    $check_sql = "SELECT id FROM orders WHERE id = $cancel_id AND user_id = $user_id AND status = 0";
+    $check_res = mysqli_query($conn, $check_sql);
+    
+    if (mysqli_num_rows($check_res) > 0) {
+        // Hợp lệ -> Chuyển trạng thái đơn hàng thành 3 (Đã hủy)
+        mysqli_query($conn, "UPDATE orders SET status = 3 WHERE id = $cancel_id");
+        
+        // Tạo thông báo thành công
+        $_SESSION['flash_msg'] = "Đã hủy đơn hàng #$cancel_id thành công!";
+        header("Location: my_orders.php");
+        exit();
+    } else {
+        // Báo lỗi nếu cố tình hủy đơn đã duyệt hoặc đơn của người khác
+        $_SESSION['flash_msg_error'] = "Không thể hủy đơn hàng này!";
+        header("Location: my_orders.php");
+        exit();
+    }
+}
 
 // Lấy danh sách tất cả các đơn hàng của user này, xếp đơn mới nhất lên đầu
 $sql_orders = "SELECT * FROM orders WHERE user_id = $user_id ORDER BY id DESC";
@@ -23,10 +51,10 @@ if ($res_orders && mysqli_num_rows($res_orders) > 0) {
 // Từ điển dịch trạng thái đơn hàng (Dựa vào cột status trong CSDL)
 function getOrderStatus($status_code) {
     switch ($status_code) {
-        case 0: return '<span class="status-badge status-pending">Chờ duyệt</span>';
-        case 1: return '<span class="status-badge status-shipping">Đang giao hàng</span>';
-        case 2: return '<span class="status-badge status-completed">Đã giao thành công</span>';
-        case 3: return '<span class="status-badge status-canceled">Đã hủy</span>';
+        case 0: return '<span class="status-badge status-pending"><i class="fa-solid fa-clock"></i> Chờ duyệt</span>';
+        case 1: return '<span class="status-badge status-shipping"><i class="fa-solid fa-truck-fast"></i> Đang giao hàng</span>';
+        case 2: return '<span class="status-badge status-completed"><i class="fa-solid fa-check"></i> Đã giao thành công</span>';
+        case 3: return '<span class="status-badge status-canceled"><i class="fa-solid fa-xmark"></i> Đã hủy</span>';
         default: return '<span class="status-badge">Không xác định</span>';
     }
 }
@@ -41,14 +69,28 @@ function getOrderStatus($status_code) {
     <script src="https://kit.fontawesome.com/da1a483940.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="assets/css/style_client.css">
     <link rel="stylesheet" href="assets/css/style_order.css">
-    
 </head>
 <body>
     <?php include "includes/header.php"; include "includes/nav.php"; ?>
 
     <main class="main-content">
         <div class="orders-container">
-            <h2 class="page-title">📦 Lịch Sử Đơn Hàng</h2>
+            <h2 class="page-title"><i class="fa-solid fa-clipboard-list"></i> Lịch Sử Đơn Hàng</h2>
+
+            <!-- Khu vực hiển thị thông báo -->
+            <?php if (isset($_SESSION['flash_msg'])): ?>
+                <div class="toast-msg toast-success">
+                    <i class="fa-solid fa-circle-check"></i> <?= $_SESSION['flash_msg'] ?>
+                </div>
+                <?php unset($_SESSION['flash_msg']); ?>
+            <?php endif; ?>
+            
+            <?php if (isset($_SESSION['flash_msg_error'])): ?>
+                <div class="toast-msg toast-error">
+                    <i class="fa-solid fa-triangle-exclamation"></i> <?= $_SESSION['flash_msg_error'] ?>
+                </div>
+                <?php unset($_SESSION['flash_msg_error']); ?>
+            <?php endif; ?>
 
             <?php if (empty($orders)): ?>
                 <div class="empty-orders">
@@ -62,13 +104,12 @@ function getOrderStatus($status_code) {
                 <?php foreach ($orders as $order): ?>
                     <div class="order-card">
                         <div class="order-header">
-                            <div class="order-id">Mã đơn: #<?= $order['id'] ?></div>
+                            <div class="order-id">Mã đơn: <strong>#<?= $order['id'] ?></strong></div>
                             <div class="order-status"><?= getOrderStatus($order['status']) ?></div>
                         </div>
                         
                         <div class="order-body">
                             <?php
-                            // Truy vấn lấy các sản phẩm CHI TIẾT bên trong đơn hàng này
                             $o_id = $order['id'];
                             $sql_details = "SELECT od.*, p.name, p.image 
                                             FROM order_details od 
@@ -93,9 +134,22 @@ function getOrderStatus($status_code) {
                             <?php endwhile; ?>
                         </div>
                         
-                        <div class="order-footer">
-                            <span class="order-total-label">Thành tiền:</span>
-                            <span class="order-total-value"><?= number_format($order['total'], 0, ',', '.') ?> đ</span>
+                        <div class="order-footer" style="display: flex; flex-direction: column; align-items: flex-end; gap: 15px;">
+                            <div>
+                                <span class="order-total-label">Thành tiền:</span>
+                                <span class="order-total-value"><?= number_format($order['total'], 0, ',', '.') ?> đ</span>
+                            </div>
+                            
+                            <!-- TUYỆT CHIÊU: Chỉ hiện nút Hủy nếu đơn hàng đang ở trạng thái 0 (Chờ duyệt) -->
+                            <?php if ($order['status'] == 0): ?>
+                                <div>
+                                    <a href="my_orders.php?action=cancel&id=<?= $order['id'] ?>" 
+                                       class="btn-cancel-order" 
+                                       onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng #<?= $order['id'] ?> này không?');">
+                                        <i class="fa-solid fa-xmark"></i> Hủy đơn hàng
+                                    </a>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>

@@ -146,3 +146,62 @@
     color: #ccc;
     margin-bottom: 20px;
 }
+
+
+/* Nút hủy đơn hàng */
+.btn-cancel-order {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    background: #fff;
+    color: var(--primary, #d70018);
+    border: 1px solid var(--primary, #d70018);
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-cancel-order:hover {
+    background: #ffe8ea;
+    box-shadow: 0 4px 10px rgba(215, 0, 24, 0.1);
+}
+
+/* Hiệu ứng Toast thông báo */
+.toast-msg {
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideDown 0.4s ease;
+}
+
+.toast-success {
+    background: #e6f4ea;
+    color: #1e8e3e;
+    border: 1px solid #ceead6;
+}
+
+.toast-error {
+    background: #fce8e6;
+    color: #d93025;
+    border: 1px solid #fad2cf;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

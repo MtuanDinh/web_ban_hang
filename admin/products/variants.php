@@ -65,6 +65,7 @@ $variants = selectDb($conn, 'product_variants', '*', ['product_id' => $product_i
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/da1a483940.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/web_ban_hang/admin/assets/css/style_main.css">
     <title>Quản lý Phiên bản</title>
 </head>
@@ -75,79 +76,104 @@ $variants = selectDb($conn, 'product_variants', '*', ['product_id' => $product_i
         <?php include("../includes/sidebar.php") ?>
         
         <div id="content">
-            <div id="product_head" style="margin-bottom: 20px;">
-                <a href="list.php" style="text-decoration: none; color: var(--text-muted); font-size: 14px;">⬅ Quay lại danh sách Sản phẩm</a>
-                <h3 style="margin-top: 10px;">Quản lý Phiên bản: <span style="color: var(--primary-color);"><?php echo $product_name; ?></span></h3>
+            <div class="page-header">
+                <a href="list.php" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Quay lại danh sách</a>
+                <h3 class="page-title" style="margin-top: 15px;">Quản lý Phiên bản: <span style="color: #b388ff;"><?php echo htmlspecialchars($product_name); ?></span></h3>
             </div>
 
-            <div style="padding: 20px; border-radius: 8px; border: 1px solid var(--border-color, #444); margin-bottom: 20px;">
-                <h4 style="margin-bottom: 15px;">Thêm phiên bản mới</h4>
-                <form action="variants.php?id=<?php echo $product_id; ?>" method="post" style="display: flex; gap: 15px; align-items: flex-end;">
+            <?php if (isset($_SESSION['flash_msg'])) : ?>
+                <div id="toast_msg">
+                    <span style="font-weight: 500; display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-circle-check"></i> <?php echo $_SESSION['flash_msg']; ?>
+                    </span>
+                    <button onclick="this.parentElement.style.display='none'"
+                        style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px; transition: 0.2s;" 
+                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <?php unset($_SESSION['flash_msg']); unset($_SESSION['msg_type']); ?>
+            <?php endif; ?>
+
+            <div class="admin-form-container" style="padding: 25px;">
+                <h4 style="margin-bottom: 20px; color: var(--primary-color);"><i class="fa-solid fa-layer-group"></i> Thêm phiên bản mới</h4>
+                <form action="variants.php?id=<?php echo $product_id; ?>" method="post" class="form-row" style="margin-bottom: 0; align-items: flex-end;">
                     
-                    <div style="flex: 1;">
+                    <div class="form-group" style="margin-bottom: 0;">
                         <label for="color">Màu sắc (VD: Đen Titan) *</label>
-                        <input type="text" name="color" required id="color" class="form_input" style="width: 100%;">
+                        <input type="text" name="color" required id="color" class="form-control">
                     </div>
                     
-                    <div style="flex: 1;">
+                    <div class="form-group" style="margin-bottom: 0;">
                         <label for="version">Phiên bản / Kích cỡ</label>
-                        <input type="text" name="version" id="version" placeholder="VD: 256GB (Bỏ trống nếu ko có)" class="form_input" style="width: 100%;">
+                        <input type="text" name="version" id="version" placeholder="VD: 256GB" class="form-control">
                     </div>
 
-                    <div style="flex: 1;">
+                    <div class="form-group" style="margin-bottom: 0;">
                         <label for="price">Giá bán (VNĐ) *</label>
-                        <input type="number" name="price" required id="price" min="0" class="form_input" style="width: 100%;">
+                        <input type="number" name="price" required id="price" min="0" class="form-control">
                     </div>
 
-                    <div style="flex: 1;">
+                    <div class="form-group" style="margin-bottom: 0;">
                         <label for="stock">Số lượng Kho *</label>
-                        <input type="number" name="stock" required id="stock" min="0" class="form_input" style="width: 100%;">
+                        <input type="number" name="stock" required id="stock" min="0" class="form-control">
                     </div>
 
-                    <div>
-                        <input type="submit" name="btn_add_variant" value="+ Thêm" class="add_button" style="height: 40px; padding: 0 20px;">
+                    <div style="flex: 0 0 120px;">
+                        <button type="submit" name="btn_add_variant" class="btn-add-new" style="width: 100%; justify-content: center;">
+                            <i class="fa-solid fa-plus"></i> Thêm
+                        </button>
                     </div>
                 </form>
             </div>
 
-            <table id="product_table">
-                <thead>
-                    <tr>
-                        <th>Mã PB</th>
-                        <th>Màu sắc</th>
-                        <th>Phiên bản / Dung lượng</th>
-                        <th>Giá bán hiện tại</th>
-                        <th>Kho</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    if (!empty($variants)) {
-                        foreach ($variants as $var) {
-                    ?>
-                            <tr>
-                                <td>#<?php echo $var['id']; ?></td>
-                                <td><strong><?php echo $var['color']; ?></strong></td>
-                                <td><?php echo $var['version'] ? $var['version'] : '<span class="text_muted">Không phân loại</span>'; ?></td>
-                                <td style="color: var(--accent-error); font-weight: bold;">
-                                    <?php echo number_format($var['price'], 0, ',', '.'); ?> đ
-                                </td>
-                                <td><?php echo $var['stock']; ?></td>
-                                <td>
-                                    <a href="variants.php?id=<?php echo $product_id; ?>&action=delete&var_id=<?php echo $var['id']; ?>"
-                                        onclick="return confirm('Xóa vĩnh viễn phiên bản này?')"
-                                        class="btn_action delete">Xóa</a>
-                                </td>
-                            </tr>
-                    <?php
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">Mã PB</th>
+                            <th>Màu sắc</th>
+                            <th>Phiên bản / Dung lượng</th>
+                            <th>Giá bán hiện tại</th>
+                            <th>Kho</th>
+                            <th style="text-align: center;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if (!empty($variants)) {
+                            foreach ($variants as $var) {
+                        ?>
+                                <tr>
+                                    <td><strong style="color: var(--text-muted);">#<?php echo $var['id']; ?></strong></td>
+                                    <td><strong style="color: var(--primary-color);"><?php echo htmlspecialchars($var['color']); ?></strong></td>
+                                    <td><?php echo $var['version'] ? htmlspecialchars($var['version']) : '<span style="color: var(--text-muted);"><i class="fa-solid fa-minus"></i> Không phân loại</span>'; ?></td>
+                                    <td style="color: var(--accent-error); font-weight: bold; font-size: 15px;">
+                                        <?php echo number_format($var['price'], 0, ',', '.'); ?> đ
+                                    </td>
+                                    <td>
+                                        <span style="background: rgba(255,255,255,0.05); padding: 4px 12px; border-radius: 12px; border: 1px solid var(--border-admin);">
+                                            <?php echo $var['stock']; ?>
+                                        </span>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <a href="variants.php?id=<?php echo $product_id; ?>&action=delete&var_id=<?php echo $var['id']; ?>"
+                                            onclick="return confirm('Xóa vĩnh viễn phiên bản này?')"
+                                            class="action-btn btn-delete"><i class="fa-solid fa-trash-can"></i> Xóa</a>
+                                    </td>
+                                </tr>
+                        <?php
+                            }
+                        } else {
+                            echo "<tr><td colspan='6' style='text-align: center; padding: 40px; color: var(--text-muted);'>
+                                    <i class='fa-solid fa-cubes-stacked' style='font-size: 40px; margin-bottom: 15px; opacity: 0.5; display: block;'></i>
+                                    Sản phẩm này chưa có phiên bản nào! Hãy thêm ở form phía trên.
+                                  </td></tr>";
                         }
-                    } else {
-                        echo "<tr><td colspan='6' class='table_no_data'>Sản phẩm này chưa có phiên bản nào! Hãy thêm ở form phía trên.</td></tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+                        ?>
+                    </tbody>
+                </table>
+            </div>
 
             <?php include("../includes/footer.php") ?>
         </div>

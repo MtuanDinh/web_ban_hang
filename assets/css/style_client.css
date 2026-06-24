@@ -54,13 +54,15 @@ body {
    3. KHU VỰC HEADER & THANH ĐIỀU HƯỚNG (NAVBAR)
    ========================================================== */
 .banner_tren {
-  background-color: rgb(253, 28, 9);
+  background-color: #b50014;
+  /* Đỏ sậm hơn một chút để làm nền tảng vững chắc */
   display: flex;
   justify-content: center;
 }
 
 nav {
-  background: linear-gradient(to top, red, rgb(245, 141, 159));
+  background-color: var(--primary);
+  /* Đổi sang màu đỏ nguyên khối, phẳng và sang trọng */
   margin: 0;
 }
 
@@ -69,17 +71,34 @@ nav>ul {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   margin: 0;
   list-style-type: none;
-  height: 100px;
+  height: 65px;
+  /* THU GỌN: Chiều cao chuẩn mực của các trang TMĐT hiện đại */
+  max-width: var(--container-width);
+  margin: 0 auto;
 }
 
 nav>ul>li,
 nav>ul>a>li {
-  background-color: #e45464;
-  padding: 16px 24px;
-  border-radius: 5px;
+  background-color: transparent;
+  /* LỘT XÁC: Xóa bỏ khối màu hồng rời rạc */
+  padding: 10px 15px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+/* TĂNG CƯỜNG: Hiệu ứng nổi bật khi lướt chuột qua (Hover) */
+nav>ul>li:hover,
+nav>ul>a>li:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  /* Tăng độ mờ sáng từ 0.15 lên 0.25 */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  /* Thêm lớp đổ bóng đen mờ phía sau */
+  transform: translateY(-1px);
+  /* Nảy nhẹ nút lên một chút xíu */
 }
 
 nav>ul>li>a,
@@ -89,38 +108,53 @@ nav>ul>a {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 14px;
 }
 
 nav>ul>a>li>img {
-  width: 15px;
+  width: 30px;
+  /* Phóng to logo lên một chút vì thanh nav đã mỏng lại */
 }
 
 /* Ô Tìm kiếm trên Navbar */
 .search-box {
   position: relative;
-  width: 30%;
+  width: 32%;
   max-width: 500px;
   background-color: #fff;
-  border-radius: 5px;
+  border-radius: 8px;
+  /* Bo góc mềm mại hơn */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  /* Đổ bóng nhẹ làm nổi bật ô tìm kiếm */
+  transition: all 0.3s ease;
+}
+
+/* Hiệu ứng khi click vào ô tìm kiếm */
+.search-box:focus-within {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
 }
 
 .search-box input {
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   width: 100%;
-  height: 45px;
-  padding-left: 35px;
+  height: 42px;
+  /* Ô search thon gọn lại */
+  padding-left: 40px;
   outline: none;
   font-size: 14px;
 }
 
 .search-box .fa-magnifying-glass {
   position: absolute;
-  left: 12px;
+  left: 15px;
   top: 50%;
   transform: translateY(-50%);
   color: #888;
+  font-size: 16px;
 }
 
 
@@ -865,5 +899,110 @@ footer {
 
   100% {
     transform: rotate(360deg);
+  }
+}
+
+/* ==========================================================
+   10. LỘT XÁC NÚT BẤM BỘ LỌC (FILTER BUTTONS)
+   ========================================================== */
+
+/* Bước 1: Ẩn hoàn toàn chấm tròn radio mặc định đi */
+.filter-options input[type="radio"] {
+  display: none;
+}
+
+/* Bước 2: Dàn đều các nút ra cho thoáng */
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Bước 3: Thiết kế lại thẻ span thành một Nút bấm (Button) xịn sò */
+.filter-options .btn-filter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 18px;
+  background-color: var(--bg-card);
+  border: 1px solid #d1d5db;
+  /* Viền xám nhạt tinh tế */
+  border-radius: 8px;
+  /* Bo góc nhẹ nhàng, nếu muốn tròn xoe thì đổi thành 30px */
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  /* Tránh bôi đen chữ khi click đúp */
+}
+
+/* Bước 4: Hiệu ứng khi lướt chuột qua (Hover) */
+.filter-options label:hover .btn-filter {
+  border-color: var(--primary);
+  color: var(--primary);
+  background-color: #fffafb;
+  /* Nền đỏ cực nhạt */
+  transform: translateY(-2px);
+  /* Nảy nhẹ lên */
+  box-shadow: 0 4px 10px rgba(215, 0, 24, 0.1);
+}
+
+/* Bước 5: TUYỆT CHIÊU - Trạng thái đang được chọn (Active) */
+/* Khi radio ẩn bị check, thẻ span nằm ngay sau nó sẽ đổi màu đỏ rực */
+.filter-options input[type="radio"]:checked+.btn-filter {
+  background-color: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(215, 0, 24, 0.25);
+  transform: translateY(0);
+  /* Nhấn chìm xuống lại */
+}
+
+/* --- Chăm chút luôn cho Nút Xóa Bộ Lọc nằm ở dưới cùng --- */
+.empty-result .btn-filter {
+  display: inline-block;
+  padding: 10px 24px;
+  background-color: transparent;
+  border: 1px solid var(--primary) !important;
+  color: var(--primary) !important;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.empty-result .btn-filter:hover {
+  background-color: var(--primary);
+  color: #ffffff !important;
+  box-shadow: 0 5px 15px rgba(215, 0, 24, 0.3);
+}
+
+/* Lưới sản phẩm - Ép cứng 4 sản phẩm / hàng trên PC */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  /* 4 cột, mỗi cột chiếm 1 phần (1 Fraction) */
+  gap: 15px;
+  margin-bottom: 50px;
+}
+
+/* --- THIẾT KẾ ĐÁP ỨNG (RESPONSIVE) --- */
+/* Màn hình Tablet (Dưới 1024px) -> Rút xuống 3 sản phẩm / hàng */
+@media screen and (max-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Màn hình Điện thoại (Dưới 768px) -> Rút xuống 2 sản phẩm / hàng */
+@media screen and (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    /* Thu hẹp khoảng cách các thẻ trên mobile */
   }
 }

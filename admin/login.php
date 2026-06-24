@@ -65,29 +65,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/web_ban_hang/admin/assets/css/style_login.css">
-    <title>Đăng nhập</title>
+    <title>Admin Login - PhoneStore</title>
+    <script src="https://kit.fontawesome.com/da1a483940.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="assets/css/style_login.css">
 </head>
 <body>
-    <h3>Quản lý cửa hàng</h3>
-    <div id="login_place">
-        <form action="login.php" method="post">
-            <label for="username">Tên đăng nhập</label>
-            <input type="text" name="username" id="username" placeholder="Nhập tên người dùng vào đây"><br>
-            <label for="password">Mật khẩu</label>
-            <input type="password" name="password" id="password" placeholder="Nhập mật khẩu vào đây"><br>
-            <input type="submit" value="Log in" id="login_btn">
-        </form>
-        <?php if(!empty($error_msg)): ?>
-            <div class="error_message">
-                <?php echo htmlspecialchars($error_msg); ?>
-            </div>
-        <?php endif; ?>
-    </div>
     
+    <div class="login-wrapper">
+        <div class="login-card">
+            
+            <div class="login-header">
+                <h2><i class="fa-solid fa-shield-halved" style="color: var(--primary-color); margin-right: 8px;"></i>System Admin</h2>
+                <p>Đăng nhập để vào bảng điều khiển</p>
+            </div>
+
+            <form action="login.php" method="post">
+                <div class="form-group">
+                    <label for="username">Tên đăng nhập</label>
+                    <div class="input-wrapper">
+                        <input type="text" name="username" id="username" placeholder="Nhập admin username..." autocomplete="off">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mật khẩu</label>
+                    <div class="input-wrapper">
+                        <input type="password" name="password" id="password" placeholder="Nhập mật khẩu...">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                </div>
+
+                <button type="submit" id="login_btn">Đăng Nhập <i class="fa-solid fa-arrow-right-to-bracket" style="margin-left: 5px;"></i></button>
+            </form>
+
+            <?php if(!empty($error_msg)): ?>
+                <div class="error_message">
+                    <i class="fa-solid fa-triangle-exclamation"></i> <?php echo htmlspecialchars($error_msg); ?>
+                </div>
+            <?php endif; ?>
+
+        </div>
+    </div>
     
 </body>
 </html>
 <?php 
-    mysqli_close($conn);
+    if(isset($conn)){
+        mysqli_close($conn);
+    }
 ?>

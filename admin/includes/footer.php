@@ -1,4 +1,4 @@
 <footer>
-    <h3>Dinh Tran Corp</h3>
+    <h3>DTA Corp.</h3>
     <p>Lưu hành nội bộ</p>
 </footer>
