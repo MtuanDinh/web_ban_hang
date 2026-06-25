@@ -127,7 +127,7 @@ if (isset($_POST['btn_place_order'])) {
                     <div class="form-row">
                         <div class="form-group">
                             <label>Họ và Tên</label>
-                            <input type="text" name="customer_name" required value="<?= htmlspecialchars($_SESSION['user_client']['name']) ?>" placeholder="Nhập họ tên">
+                            <input type="text" name="customer_name" required value="<?= htmlspecialchars($_SESSION['user_client']['name'] ?? '') ?>" placeholder="Nhập họ tên">
                         </div>
                         <div class="form-group">
                             <label>Số điện thoại</label>

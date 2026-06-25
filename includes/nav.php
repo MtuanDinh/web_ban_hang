@@ -187,11 +187,12 @@ if (isset($_SESSION['user_client'])) {
             <li class="user-dropdown" style="background-color: transparent;">
                 <a href="#" style="color: white; font-weight: 600; cursor: default;">
                     <i class="fa-regular fa-circle-user"></i> 
-                    Chào, <?= htmlspecialchars(explode(' ', trim($_SESSION['user_client']['name']))[0]) ?> <!-- Chỉ lấy tên gọi cho gọn -->
+                    Chào, <?= htmlspecialchars($_SESSION['user_client']['name'] ?? 'Bạn') ?>
                     <i class="fa-solid fa-caret-down" style="font-size: 12px; margin-left: 5px;"></i>
                 </a>
                 
                 <div class="dropdown-content">
+                    <a href="profile.php"><i class="fa-regular fa-id-card"></i> Thông tin tài khoản</a>
                     <a href="my_orders.php"><i class="fa-solid fa-clipboard-list"></i> Đơn mua của tôi</a>
                     <a href="logout.php" style="color: #dc3545 !important; border-bottom: none;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a>
                 </div>

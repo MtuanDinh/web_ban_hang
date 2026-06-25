@@ -3,7 +3,7 @@
         <div class="container footer-grid">
             <!-- Cột 1: Thông tin thương hiệu -->
             <div class="footer-col company-info">
-                <img src="assets/image/smartphone-anhlogo.png" alt="PhoneStore Logo" class="footer-logo">
+                <img src="assets/image/icon.png" alt="PhoneStore Logo" class="footer-logo">
                 <p class="company-desc">Hệ thống bán lẻ điện thoại, máy tính bảng và phụ kiện chính hãng uy tín hàng đầu tại Việt Nam.</p>
                 <ul class="contact-info">
                     <li><i class="fa-solid fa-location-dot"></i> Trụ sở: Thành phố Hà Nội, Việt Nam</li>

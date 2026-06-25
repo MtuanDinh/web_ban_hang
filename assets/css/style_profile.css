@@ -1,0 +1,222 @@
+.profile-container {
+    max-width: var(--container-width);
+    margin: 40px auto;
+    padding: 0 15px;
+    display: flex;
+    gap: 30px;
+}
+
+/* KHU VỰC MENU TRÁI (SIDEBAR) */
+.profile-sidebar {
+    flex: 0 0 280px;
+}
+
+.user-brief {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+}
+
+.user-avatar {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: #ffe8ea;
+    color: var(--primary, #d70018);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    border: 2px solid var(--primary, #d70018);
+}
+
+.user-name-brief {
+    font-weight: 700;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.profile-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.profile-menu li {
+    margin-bottom: 8px;
+}
+
+.profile-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #555;
+    border-radius: 8px;
+    transition: 0.2s;
+    font-weight: 500;
+}
+
+.profile-menu a:hover,
+.profile-menu a.active {
+    background: #ffe8ea;
+    color: var(--primary, #d70018);
+}
+
+.profile-menu a i {
+    width: 20px;
+    text-align: center;
+}
+
+/* KHU VỰC FORM PHẢI */
+.profile-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.profile-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.profile-card h3 {
+    margin: 0 0 20px 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+}
+
+/* Cấu trúc Form */
+.form-row-2 {
+    display: flex;
+    gap: 20px;
+}
+
+.form-row-2 .form-group {
+    flex: 1;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+    background: #fdfdfd;
+}
+
+.form-control:focus {
+    border-color: var(--primary, #d70018);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(215, 0, 24, 0.1);
+}
+
+.form-control:disabled {
+    background: #f0f0f0;
+    color: #888;
+    cursor: not-allowed;
+}
+
+.btn-save {
+    background: var(--primary, #d70018);
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+}
+
+.btn-save:hover {
+    background: #c00015;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(215, 0, 24, 0.2);
+}
+
+/* Style Thông báo */
+.toast-msg {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideDown 0.4s ease;
+}
+
+.toast-success {
+    background: #e6f4ea;
+    color: #1e8e3e;
+    border: 1px solid #ceead6;
+}
+
+.toast-error {
+    background: #fce8e6;
+    color: #d93025;
+    border: 1px solid #fad2cf;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 768px) {
+    .profile-container {
+        flex-direction: column;
+    }
+
+    .profile-sidebar {
+        flex: none;
+        width: 100%;
+    }
+
+    .form-row-2 {
+        flex-direction: column;
+        gap: 0;
+    }
+}
