@@ -318,6 +318,5 @@ if ($res_reviews) {
     <?php include "includes/footer.php"; ?>
 
     <script src="assets/js/detail.js"></script>
-    <script src="assets/js/script.js"></script>
 </body>
 </html>

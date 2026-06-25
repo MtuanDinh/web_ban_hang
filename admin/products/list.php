@@ -3,12 +3,27 @@ require_once("../includes/check_admin_alive.php");
 require_once("../../includes/connect_db.php");
 require_once("../../includes/db_helper.php");
 
+// ==========================================
+// XỬ LÝ TÌM KIẾM SẢN PHẨM
+// ==========================================
+$search_query = "";
+$where_clause = "";
+
+if (isset($_GET['search']) && trim($_GET['search']) != "") {
+    $search_query = trim($_GET['search']);
+    $safe_search = mysqli_real_escape_string($conn, $search_query);
+    
+    // Hỗ trợ tìm kiếm theo cả Tên sản phẩm HOẶC Mã ID
+    $where_clause = "WHERE p.name LIKE '%$safe_search%' OR p.id = '$safe_search'";
+}
+
 $sql_product = "SELECT p.*, 
                            c1.name AS brand_name, 
                            c2.name AS cate_name
                     FROM products p
                     LEFT JOIN categories c1 ON p.category_id = c1.id
                     LEFT JOIN categories c2 ON c1.parent_id = c2.id
+                    $where_clause
                     ORDER BY p.id DESC";
 
 $result = mysqli_query($conn, $sql_product);
@@ -36,6 +51,23 @@ $result = mysqli_query($conn, $sql_product);
             <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h3 class="page-title">Quản lý sản phẩm</h3>
                 <button id="open" class="btn-add-new"><i class="fa-solid fa-box-open"></i> Thêm sản phẩm mới</button>
+            </div>
+
+            <div class="action-bar">
+                <form action="" method="GET">
+                    <input type="text" name="search" value="<?php echo htmlspecialchars($search_query); ?>" placeholder="Nhập tên hoặc Mã ID sản phẩm cần tìm..." style="width: 350px;">
+                    <button type="submit" class="btn-filter"><i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm</button>
+                    
+                    <?php if ($search_query != ""): ?>
+                        <a href="list.php" class="btn-reset" style="padding: 10px 15px;"><i class="fa-solid fa-rotate-right" style="margin-right: 5px;"></i> Hủy lọc</a>
+                    <?php endif; ?>
+                </form>
+                
+                <?php if ($search_query != ""): ?>
+                    <div style="color: var(--primary-color); font-size: 14px; font-weight: 600;">
+                        <i class="fa-solid fa-check-double"></i> Tìm thấy <?php echo mysqli_num_rows($result); ?> kết quả
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="table-container">
@@ -96,7 +128,7 @@ $result = mysqli_query($conn, $sql_product);
                         } else {
                             echo "<tr><td colspan='6' style='text-align: center; padding: 40px; color: var(--text-muted);'>
                                     <i class='fa-solid fa-box-open' style='font-size: 40px; margin-bottom: 15px; opacity: 0.5; display: block;'></i>
-                                    Chưa có sản phẩm nào trong hệ thống!
+                                    Không tìm thấy sản phẩm nào!
                                   </td></tr>";
                         }
                         ?>

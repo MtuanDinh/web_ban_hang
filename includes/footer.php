@@ -22,7 +22,7 @@
 
                     if ($result_footer && mysqli_num_rows($result_footer) > 0) {
                         while ($cat = mysqli_fetch_assoc($result_footer)) {
-                            echo '<li><a href="index.php?category_id=' . $cat['id'] . '"><i class="fa-solid fa-angle-right"></i> ' . htmlspecialchars($cat['name']) . '</a></li>';
+                            echo '<li><a href="index.php?category_id=' . $cat['id'] . '#product-start"><i class="fa-solid fa-angle-right"></i> ' . htmlspecialchars($cat['name']) . '</a></li>';
                         }
                     }
                     ?>

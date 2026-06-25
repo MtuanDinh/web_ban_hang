@@ -23,15 +23,45 @@ LEFT JOIN product_variants pv ON p.id = pv.product_id
 $where_clause
 GROUP BY p.id 
 ORDER BY p.id DESC
-LIMIT 8";
+LIMIT 12";
 $result = mysqli_query($conn, $sql);
 
-// THÊM MỚI 1: Lấy 4 sản phẩm ngẫu nhiên cho FLASH SALE
-$sql_flash = "SELECT p.id, p.name, p.image, MIN(pv.price) as min_price 
-              FROM products p LEFT JOIN product_variants pv ON p.id = pv.product_id 
-              GROUP BY p.id ORDER BY RAND() LIMIT 4";
-$res_flash = mysqli_query($conn, $sql_flash);
+// Bắt đầu Session nếu chưa có
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
+// ==========================================
+// THÊM MỚI 1: Lấy 4 sản phẩm cho FLASH SALE (Cố định theo Phiên/Session)
+// ==========================================
+if (!isset($_SESSION['flash_sale_info']) || empty($_SESSION['flash_sale_info'])) {
+    // Nếu là lần đầu tiên truy cập trang trong phiên này, chọn ngẫu nhiên 4 sản phẩm
+    $sql_flash_ids = "SELECT id FROM products ORDER BY RAND() LIMIT 4";
+    $res_ids = mysqli_query($conn, $sql_flash_ids);
+    
+    $flash_info = [];
+    if ($res_ids && mysqli_num_rows($res_ids) > 0) {
+        while ($row = mysqli_fetch_assoc($res_ids)) {
+            // Tạo luôn % giảm giá và % đã bán ảo CỐ ĐỊNH cho sản phẩm này và lưu vào Session
+            $flash_info[$row['id']] = [
+                'discount' => rand(15, 40),
+                'sold' => rand(40, 90)
+            ];
+        }
+    }
+    $_SESSION['flash_sale_info'] = $flash_info;
+}
+
+// Truy vấn chi tiết 4 sản phẩm dựa trên Session (Đảm bảo giá tiền luôn cập nhật mới nhất từ CSDL)
+$res_flash = false;
+if (!empty($_SESSION['flash_sale_info'])) {
+    $ids = array_keys($_SESSION['flash_sale_info']);
+    $ids_string = implode(',', $ids);
+    
+    $sql_flash = "SELECT p.id, p.name, p.image, MIN(pv.price) as min_price 
+                  FROM products p LEFT JOIN product_variants pv ON p.id = pv.product_id 
+                  WHERE p.id IN ($ids_string)
+                  GROUP BY p.id";
+    $res_flash = mysqli_query($conn, $sql_flash);
+}
 // THÊM MỚI 2: Lấy 5 sản phẩm Phụ kiện mới nhất
 $sql_acc_prods = "SELECT p.id, p.name, p.image, MIN(pv.price) as min_price 
                   FROM products p LEFT JOIN product_variants pv ON p.id = pv.product_id 
@@ -94,15 +124,22 @@ $res_acc_cats = mysqli_query($conn, $sql_acc_cats);
             </div>
             
             <div class="flash-grid">
-                <?php if ($res_flash && mysqli_num_rows($res_flash) > 0): 
+                <?php if (isset($res_flash) && $res_flash && mysqli_num_rows($res_flash) > 0): 
                     while ($f_row = mysqli_fetch_assoc($res_flash)):
                         $f_price = $f_row['min_price'] ? $f_row['min_price'] : 0;
                         $f_img = !empty($f_row['image']) ? 'assets/uploads/' . $f_row['image'] : 'https://via.placeholder.com/300';
-                        $fake_discount = rand(15, 40);
+                        
+                        // TUYỆT ĐỐI KHÔNG DÙNG RAND() Ở ĐÂY NỮA
+                        // Kéo thông số cố định đã lưu từ Session ra
+                        $fake_discount = isset($_SESSION['flash_sale_info'][$f_row['id']]) ? $_SESSION['flash_sale_info'][$f_row['id']]['discount'] : 15;
+                        $sold_percent = isset($_SESSION['flash_sale_info'][$f_row['id']]) ? $_SESSION['flash_sale_info'][$f_row['id']]['sold'] : 50;
+                        
                         $f_old = $f_price / (1 - ($fake_discount/100));
                 ?>
                 <a href="detail.php?id=<?= $f_row['id'] ?>" class="flash-card" style="position: relative; text-decoration: none;">
+                    
                     <div class="flash-badge">GIẢM <?= $fake_discount ?>%</div>
+                    
                     <div class="product-image"><img src="<?= htmlspecialchars($f_img) ?>" alt="<?= htmlspecialchars($f_row['name']) ?>"></div>
                     <h3 class="product-name" style="font-size: 13px;"><?= htmlspecialchars($f_row['name']) ?></h3>
                     <div style="color: #d70018; font-weight: 800; font-size: 18px; margin-bottom: 5px;">
@@ -113,8 +150,10 @@ $res_acc_cats = mysqli_query($conn, $sql_acc_cats);
                     <?php endif; ?>
                     
                     <div style="margin-top: 10px; background: #ffeaec; border-radius: 10px; height: 16px; position: relative; overflow: hidden;">
-                        <div style="background: linear-gradient(90deg, #ff4d4f, #d70018); width: <?= rand(40, 90) ?>%; height: 100%; border-radius: 10px;"></div>
+                        
+                        <div style="background: linear-gradient(90deg, #ff4d4f, #d70018); width: <?= $sold_percent ?>%; height: 100%; border-radius: 10px;"></div>
                         <span style="position: absolute; top: 1px; left: 0; width: 100%; text-align: center; color: #fff; font-size: 10px; font-weight: bold; line-height: 15px;">Đang bán chạy</span>
+                    
                     </div>
                 </a>
                 <?php endwhile; endif; ?>

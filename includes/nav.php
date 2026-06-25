@@ -50,7 +50,7 @@ if (isset($_SESSION['user_client'])) {
 <!-- THÊM CLASS 'sticky-nav' ĐỂ NAVBAR DÍNH TRÊN ĐỈNH -->
 <nav class="sticky-nav">
     <ul>
-        <a href="index.php"><li><img src="assets/image/smartphone-anhlogo.png" alt="Logo" style="width: 25px;"></li></a>
+        <a href="index.php"><li><img src="assets/image/icon.png" alt="Logo" style="width: 25px;"></li></a>
 
         <li class="category-dropdown">
             <a href="#" style="cursor: default;"><i class="fa-solid fa-list"></i> Danh mục <i class="fa-solid fa-angle-down"></i></a>
@@ -107,11 +107,70 @@ if (isset($_SESSION['user_client'])) {
 
         <li><a href="#" id="btn-location"><i class="fa-solid fa-location-crosshairs"> </i> <span id="location-text">Vị trí</span> <i class="fa-solid fa-angle-down"></i></a></li>
         
-        <!-- THANH TÌM KIẾM -->
-        <form class="search-box" action="search.php" method="GET" style="display: inline-flex; align-items: center; width: 35%;">
+        <form class="search-box" id="main-search-form" action="search.php" method="GET" style="display: inline-flex; align-items: center; width: 35%; position: relative;">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" name="keyword" placeholder="Bạn muốn mua gì hôm nay?">
+            <input type="text" name="keyword" id="search-input" placeholder="Bạn muốn mua gì hôm nay?" autocomplete="off">
+            
+            <div class="search-suggest-box" id="search-suggest-box">
+                <div id="recent-searches">
+                    <div class="suggest-header">
+                        <span><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử tìm kiếm</span>
+                        <span id="clear-recent" style="cursor: pointer; color: #d70018; font-weight: bold;">Xóa</span>
+                    </div>
+                    <ul id="recent-list">
+                        </ul>
+                </div>
+                
+                <div id="live-results" style="display: none;">
+                    <div class="suggest-header">
+                        <span><i class="fa-solid fa-bolt" style="color: #ffb74d;"></i> Sản phẩm gợi ý</span>
+                    </div>
+                    <ul id="live-list">
+                        </ul>
+                </div>
+            </div>
         </form>
+
+        <style>
+            /* CSS GIAO DIỆN HỘP TÌM KIẾM TỰ ĐỘNG */
+            .search-suggest-box {
+                position: absolute;
+                top: 110%; /* Nằm ngay sát dưới thanh input */
+                left: 0;
+                width: 100%;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+                z-index: 1000;
+                border: 1px solid #eee;
+                display: none; /* Ẩn đi khi chưa bấm vào */
+                overflow: hidden;
+            }
+            .suggest-header {
+                display: flex;
+                justify-content: space-between;
+                padding: 10px 15px;
+                font-size: 13px;
+                font-weight: 600;
+                color: #888;
+                background: #f8f9fa;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            .search-suggest-box ul { list-style: none; padding: 0; margin: 0; }
+            .search-suggest-box li { padding: 8px 15px; border-bottom: 1px solid #f9f9f9; cursor: pointer; transition: 0.2s; }
+            .search-suggest-box li:last-child { border-bottom: none; }
+            .search-suggest-box li:hover { background: #f1f5f9; }
+            .search-suggest-box li a { text-decoration: none; color: #333; display: flex; align-items: center; gap: 12px; }
+            
+            /* Giao diện cho thẻ Sản phẩm gợi ý */
+            .live-item-img { width: 45px; height: 45px; object-fit: contain; border-radius: 4px; border: 1px solid #eee; padding: 2px;}
+            .live-item-info { flex: 1; }
+            .live-item-name { font-weight: 500; font-size: 14px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 3px; }
+            .live-item-price { color: #d70018; font-weight: bold; font-size: 13px; }
+            .recent-item { color: #555; font-size: 14px; }
+        </style>
+
+        <script src="assets/js/live_search.js"></script>
 
         <!-- NÚT GIỎ HÀNG RIÊNG BIỆT (LUÔN HIỂN THỊ CÙNG BADGE) -->
         <li>
@@ -221,7 +280,7 @@ if (isset($_SESSION['user_client'])) {
                 <li data-discount="4">Bình Dương</li>
                 <li data-discount="1">Bà Rịa - Vũng Tàu</li>
                 <li data-discount="2">Bắc Ninh</li>
-                <li data-discount="3">Thanh Hóa</li>
+                <li data-discount="36">Thanh Hóa</li>
             </ul>
         </div>
     </div>
